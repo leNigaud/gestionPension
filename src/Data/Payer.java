@@ -6,13 +6,21 @@ import java.time.LocalDate; // import the LocalDateTime class
  */
 public class Payer {
     private String IM;
-    private int num_tarif;
+    private String num_tarif;
     private LocalDate date;
 
+    //Constructor
+    public Payer(String iM, String num_tarif, LocalDate date) {
+        IM = iM;
+        this.num_tarif = num_tarif;
+        this.date = date;
+    }
+
+    //Getters
     public String getIM() {
         return IM;
     }
-    public int getNum_tarif() {
+    public String getNum_tarif() {
         return num_tarif;
     }
     public LocalDate getDate() {
