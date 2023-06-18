@@ -18,7 +18,7 @@ public class Model {
             e.printStackTrace();
         }
     }
-
+    //CRUD functions
     //Add/Create a Personne in the DB 
     public void addPersonne(Personne person) {
         try {
@@ -87,6 +87,7 @@ public class Model {
         try {
             String query = "SELECT * FROM personne";
             PreparedStatement ps = connection.prepareStatement(query);
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String IM = rs.getString("IM"); //take all the columns for a row in the rs
@@ -171,6 +172,11 @@ public class Model {
             editStatement.setString(8, person.getNomConjoint());
             editStatement.setString(9, person.getPrenomConjoint());
             editStatement.setString(10, person.getIM());
+
+            if(isDead(person)) { //if a person is dead, add his conjoint to the conjoint table
+                addConjoint(person);
+            }
+            
             editStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -212,6 +218,9 @@ public class Model {
     //Delete a Personne 
     public void deletePerson(String IM) {
         try {
+            Personne person = getPersonne(IM);
+            deleteConjoint(person.getNomConjoint(), person.getPrenomConjoint()); // if personne deleted, respective conjoint deleted
+
             String deleteQuery = "DELETE FROM personne WHERE \"IM\" = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setString(1, IM);
@@ -280,10 +289,257 @@ public class Model {
         }
     }
     
-    //Other functions
-    //Adding nomConjoint in conjoint Table if Dead 
-    public void addConjoint() {
+    //Delete the corresponding Conjoint 
+    public void deleteConjoint(String nameConjoint, String firstNameConjoint) {
+        try {
+            String deleteQuery = "DELETE FROM conjoint WHERE \"nomConjoint\" = ? AND \"prenomConjoint\" = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+            deleteStatement.setString(1, nameConjoint);
+            deleteStatement.setString(2, firstNameConjoint);
+                
+            deleteStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+    }
         
     }
+
+    //Other functions
+    //Get a Person from DB by his IM 
+    public Personne getPersonne(String IM) {
+        Personne personne = null;
+        try {
+            String query = "SELECT * FROM personne WHERE \"IM\" = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, IM);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+
+            String im = rs.getString("IM"); 
+            String nom = rs.getString("nom");
+            String prénoms = rs.getString("prénoms");
+            LocalDate datenais = rs.getDate("datenais").toLocalDate();
+            String diplome = rs.getString("diplome");
+            String contact = rs.getString("contact");
+            String statut = rs.getString("statut");
+            String situation = rs.getString("situation");
+            String nomConjoint = rs.getString("nomConjoint");
+            String prenomConjoint = rs.getString("prenomConjoint");
+            
+            personne = new Personne(im, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint);
+            
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return personne;
+    }
+
+    //Get a Tarif from DB by its num_tarif 
+    public Tarif getTarif(String numTarif) {
+        Tarif tarif = null;
+        try {
+            String query = "SELECT * FROM tarif WHERE \"num_tarif\" = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, numTarif);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+
+            String numtarif = rs.getString("num_tarif");
+            String diplome = rs.getString("diplome");
+            String catégorie = rs.getString("catégorie");
+            int montant = rs.getInt("montant");
+
+            tarif = new Tarif(numtarif, diplome, catégorie, montant);
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return tarif;
+    }
+
+    //Get a Tarif from DB by its diplome 
+    public Tarif getTarifDiplome(String diplome) {
+        Tarif tarif = null;
+        try {
+            String query = "SELECT * FROM tarif WHERE \"diplome\" = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, diplome);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) { //verify if the conjoint already exists
+                String numtarif = rs.getString("num_tarif");
+                String diplom = rs.getString("diplome");
+                String catégorie = rs.getString("catégorie");
+                int montant = rs.getInt("montant");
+                tarif = new Tarif(numtarif, diplom, catégorie, montant);
+            }   
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return tarif;
+    }
+
+    //Verify if a person is dead
+    public boolean isDead(Personne personne) {
+        if(personne.getStatut() == "decede") return true;
+        else return false;
+    }
+
+    //Adding nomConjoint in conjoint Table if Dead 
+    public void addConjoint(Personne personne) {
+        try {
+            String queryVerification = "SELECT * FROM conjoint WHERE \"numPension\" = ?";
+            PreparedStatement psv = connection.prepareStatement(queryVerification);
+            String numPension = personne.getIM() + "2";
+            psv.setString(1, numPension);
+            ResultSet rs = psv.executeQuery();
+            
+            if (!rs.next()) { //verify if the conjoint already exists
+                String query = "INSERT INTO conjoint (\"numPension\", \"nomConjoint\", \"prenomConjoint\", montant) VALUES (?, ?, ?, ?)";
+                PreparedStatement ps = connection.prepareStatement(query);
+                String nomConjoint = personne.getNomConjoint();
+                String prenomConjoint = personne.getPrenomConjoint();
+                String dip = personne.getDiplome();
     
+                Tarif tarif = this.getTarifDiplome(dip);
+                double m = 0.4 * (double) tarif.getMontant();
+                int montant = (int) Math.round(m);
+
+
+                ps.setString(1, numPension);
+                ps.setString(2, nomConjoint);
+                ps.setString(3, prenomConjoint);
+                ps.setInt(4, montant);  
+
+                ps.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    //Finding a person by his Matricule (IM) 
+    public List<Personne> getPersonneIM(String IM) {
+        List<Personne> allPersons = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM personne WHERE \"IM\" LIKE '%" + IM + "%'";
+            Statement statement = connection.createStatement();
+            
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String im = rs.getString("IM"); 
+                String nom = rs.getString("nom");
+                String prénoms = rs.getString("prénoms");
+                LocalDate datenais = rs.getDate("datenais").toLocalDate(); 
+                String diplome = rs.getString("diplome");
+                String contact = rs.getString("contact");
+                String statut = rs.getString("statut");
+                String situation = rs.getString("situation");
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+            
+                Personne personne = new Personne(im, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint); 
+                allPersons.add(personne);                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allPersons;
+    }
+
+    //Finding a person by his name or firstname  
+    public List<Personne> getPersonneName(String name) {
+        List<Personne> allPersons = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM personne WHERE nom ILIKE '%" + name + "%' OR prénoms ILIKE '%" + name + "%'";
+
+            Statement statement = connection.createStatement();
+            
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String im = rs.getString("IM"); 
+                String nom = rs.getString("nom");
+                String prénoms = rs.getString("prénoms");
+                LocalDate datenais = rs.getDate("datenais").toLocalDate(); 
+                String diplome = rs.getString("diplome");
+                String contact = rs.getString("contact");
+                String statut = rs.getString("statut");
+                String situation = rs.getString("situation");
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+            
+                Personne personne = new Personne(im, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint); 
+                allPersons.add(personne);                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allPersons;
+    }
+
+    //List of Personnes by statut, The total effectif is just getAllPersonneByStatut().size() 
+    public List<Personne> listAllPersonneByStatut() {
+        List<Personne> allPersons = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM personne ORDER BY statut DESC";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String IM = rs.getString("IM"); 
+                String nom = rs.getString("nom");
+                String prénoms = rs.getString("prénoms");
+                LocalDate datenais = rs.getDate("datenais").toLocalDate(); 
+                String diplome = rs.getString("diplome");
+                String contact = rs.getString("contact");
+                String statut = rs.getString("statut");
+                String situation = rs.getString("situation");
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+            
+                Personne personne = new Personne(IM, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint); 
+                allPersons.add(personne);                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allPersons;
+    }
+
+    //List of paid pensions between two dates 
+    public List<Payer> listAllPayersBetweenDates(LocalDate date1, LocalDate date2) {
+        List<Payer> allPayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM payer WHERE date BETWEEN ? AND ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            java.sql.Date date11 = java.sql.Date.valueOf(date1); 
+            java.sql.Date date22 = java.sql.Date.valueOf(date2); 
+
+            ps.setDate(1, date11);
+            ps.setDate(2, date22);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String IM = rs.getString("IM");
+                String numTarif = rs.getString("num_tarif");
+                LocalDate date = rs.getDate("date").toLocalDate();
+    
+                Payer payer = new Payer(IM, numTarif, date);
+                allPayers.add(payer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allPayers;
+    }
+
+    
+
+
+
+
 }
