@@ -1,13 +1,11 @@
 package Model;
+import Data.*;
 import java.sql.*;
 import java.util.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-
-import Data.*;
 
 public class Model {
-    private final String DB_URL = "jdbc:postgresql://localhost:5432/test";
+    private final String DB_URL = "jdbc:postgresql://localhost:5432/gestion_pension";
     private final String USER = "postgres";
     private final String PASSWORD = "root";
     private Connection connection;
@@ -21,19 +19,18 @@ public class Model {
         }
     }
 
-    //Add/Create a Personne in the DB
+    //Add/Create a Personne in the DB 
     public void addPersonne(Personne person) {
         try {
-            String query = "INSERT INTO personne (IM, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO personne (\"IM\", nom, prénoms, datenais, diplome, contact, statut, situation, \"nomConjoint\", \"prenomConjoint\") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, person.getIM());
             ps.setString(2, person.getNom());
             ps.setString(3, person.getPrénoms());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = person.getDatenais().format(formatter);
-            ps.setString(4, dateString);
+            java.sql.Date datenais = java.sql.Date.valueOf(person.getDatenais()); //casting the LocalDate into a sql.Date type to be entered in the DB
+            ps.setDate(4, datenais);
 
             ps.setString(5, person.getDiplome());
             ps.setString(6, person.getContact());
@@ -49,7 +46,7 @@ public class Model {
         }
     }
 
-    //Add/Create a Tarif in DB
+    //Add/Create a Tarif in DB 
     public void addTarif(Tarif tarif) {
         try {
             String query = "INSERT INTO tarif (num_tarif, diplome, catégorie, montant) VALUES (?, ?, ?, ?)";
@@ -57,7 +54,7 @@ public class Model {
             ps.setString(1, tarif.getNum_tarif());
             ps.setString(2, tarif.getDiplome());
             ps.setString(3, tarif.getCatégorie());
-            ps.setString(4, String.valueOf(tarif.getMontant()));  
+            ps.setInt(4, (tarif.getMontant()));  
             
             ps.executeUpdate();
 
@@ -66,18 +63,17 @@ public class Model {
         }
     }
 
-    //Add/Create a Payment in DB
+    //Add/Create a Payment in DB 
     public void addPayer(Payer payment) {
         try {
-            String query = "INSERT INTO tarif (IM, num_tarif, date) VALUES (?, ?, ?)";
+            String query = "INSERT INTO payer (\"IM\", num_tarif, date) VALUES (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, payment.getIM());
             ps.setString(2, payment.getNum_tarif());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = payment.getDate().format(formatter);
-            ps.setString(3, dateString);
-            
+            java.sql.Date date = java.sql.Date.valueOf(payment.getDate());
+            ps.setDate(3, date);
+
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -85,7 +81,7 @@ public class Model {
         }
     }
 
-    //Display/Read all Persons
+    //Display/Read all Persons 
     public List<Personne> getAllPersons() {
         List<Personne> allPersons = new ArrayList<>();
         try {
@@ -114,7 +110,7 @@ public class Model {
         return allPersons;
     }
 
-    //Display/Read all Tarifs
+    //Display/Read all Tarifs 
     public List<Tarif> getAllTarifs() {
         List<Tarif> allTarifs = new ArrayList<>();
         try {
@@ -136,7 +132,7 @@ public class Model {
         return allTarifs;
     }
 
-    //Display/Read all Payer
+    //Display/Read all Payer 
     public List<Payer> getAllPayers() {
         List<Payer> allPayers = new ArrayList<>();
         try {
@@ -157,17 +153,16 @@ public class Model {
         return allPayers;
     }
 
-    //Modify/Update Personne
+    //Modify/Update Personne 
     public void updatePerson(Personne person) {
         try {
-            String editQuery = "UPDATE personne SET nom = ?, prénoms = ?, datenais = ?, diplome = ?, contact = ?, statut = ?, situation = ?, nomConjoint = ?, prenomConjoint = ? WHERE IM = ?";
+            String editQuery = "UPDATE personne SET nom = ?, prénoms = ?, datenais = ?, diplome = ?, contact = ?, statut = ?, situation = ?, \"nomConjoint\" = ?, \"prenomConjoint\" = ? WHERE \"IM\" = ?";
             PreparedStatement editStatement = connection.prepareStatement(editQuery);
             editStatement.setString(1, person.getNom());
             editStatement.setString(2, person.getPrénoms());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = person.getDatenais().format(formatter);
-            editStatement.setString(3, dateString);
+            java.sql.Date datenais = java.sql.Date.valueOf(person.getDatenais()); 
+            editStatement.setDate(3, datenais);
             
             editStatement.setString(4, person.getDiplome());
             editStatement.setString(5, person.getContact());
@@ -182,10 +177,10 @@ public class Model {
         }
     }
     
-    //Modify/Update Tarif
+    //Modify/Update Tarif 
     public void updateTarif(Tarif tarif) {
         try {
-            String editQuery = "UPDATE tarif SET diplome = ?, categorie = ?, montant = ? WHERE num_tarif = ?";
+            String editQuery = "UPDATE tarif SET diplome = ?, catégorie = ?, montant = ? WHERE num_tarif = ?";
             PreparedStatement editStatement = connection.prepareStatement(editQuery);
             editStatement.setString(1, tarif.getDiplome());
             editStatement.setString(2, tarif.getCatégorie());
@@ -197,16 +192,15 @@ public class Model {
         }
     }
     
-    //Modify/Update Payer
+    //Modify/Update Payer 
     public void updatePayer(Payer payer) {
         try {
-            String editQuery = "UPDATE payer SET num_tarif = ?, date = ? WHERE IM = ?";
+            String editQuery = "UPDATE payer SET num_tarif = ?, date = ? WHERE \"IM\" = ?";
             PreparedStatement editStatement = connection.prepareStatement(editQuery);
             editStatement.setString(1, payer.getNum_tarif());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = payer.getDate().format(formatter);
-            editStatement.setString(2, dateString);
+            java.sql.Date date = java.sql.Date.valueOf(payer.getDate()); 
+            editStatement.setDate(2, date);
             
             editStatement.setString(3, payer.getIM());
             editStatement.executeUpdate();
@@ -215,10 +209,10 @@ public class Model {
         }
     }
 
-    //Delete a Personne
+    //Delete a Personne 
     public void deletePerson(String IM) {
         try {
-            String deleteQuery = "DELETE FROM personne WHERE IM = ?";
+            String deleteQuery = "DELETE FROM personne WHERE \"IM\" = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setString(1, IM);
             
@@ -230,24 +224,24 @@ public class Model {
         }
     }
     
-    //Delete a Tarif
+    //Delete a Tarif 
     public void deleteTarif(String numTarif) {
         try {
             String deleteQuery = "DELETE FROM tarif WHERE num_tarif = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setString(1, numTarif);
 
-            deletePayert(numTarif); // if tarif deleted, all tarifs in payer deleted
+            deletePayerTarif(numTarif); // if tarif deleted, all tarifs in payer deleted
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    //Delete a Payment
+    //Delete a Payment 
     public void deletePayer(String IM) {
         try {
-            String deleteQuery = "DELETE FROM payer WHERE IM = ?";
+            String deleteQuery = "DELETE FROM payer WHERE \"IM\" = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setString(1, IM);
             deleteStatement.executeUpdate();
@@ -256,17 +250,16 @@ public class Model {
         }
     }
 
-    //Overloaded deletePayer for all
+    //Overloaded deletePayer for all 
     public void deletePayer(String IM, String num_tarif, LocalDate date) {
         try {
-            String deleteQuery = "DELETE FROM payer WHERE IM = ? AND num_tarif = ? AND date = ?";
+            String deleteQuery = "DELETE FROM payer WHERE \"IM\" = ? AND num_tarif = ? AND date = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
             deleteStatement.setString(1, IM);
             deleteStatement.setString(2, num_tarif);
             
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = date.format(formatter);
-            deleteStatement.setString(3, dateString);
+            java.sql.Date dateP = java.sql.Date.valueOf(date); 
+            deleteStatement.setDate(3, dateP);
 
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
@@ -274,8 +267,8 @@ public class Model {
         }
     }
 
-    //another deletePayer for num_tarif
-    public void deletePayert(String num_tarif) {
+    //another deletePayer for num_tarif 
+    public void deletePayerTarif(String num_tarif) {
         try {
             String deleteQuery = "DELETE FROM payer WHERE num_tarif = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
