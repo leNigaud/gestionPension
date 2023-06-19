@@ -33,6 +33,7 @@ import org.jfree.data.statistics.SimpleHistogramDataset;
 
 import java.awt.Color;
 
+//All implementations are here, to perform actions use the *DAO class
 public class Model {
     private final String DB_URL = "jdbc:postgresql://localhost:5432/gestion_pension";
     private final String USER = "postgres";
