@@ -1,8 +1,37 @@
 package Model;
 import Data.*;
 import java.sql.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.time.*;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Random;
+
+//for the pdf
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+//for the histogramm
+import org.jfree.chart.ChartFactory; 
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.data.Range;
+
+import org.jfree.data.statistics.SimpleHistogramBin;
+import org.jfree.data.statistics.SimpleHistogramDataset;
+
+import java.awt.Color;
 
 public class Model {
     private final String DB_URL = "jdbc:postgresql://localhost:5432/gestion_pension";
@@ -384,6 +413,33 @@ public class Model {
         else return false;
     }
 
+    //Get a Payment in the DB based on IM, numtarif, date
+    public Payer getPayer(String IM, String num_tarif, LocalDate date) {
+        Payer payment = null;
+        try {
+            String query = "SELECT * FROM payer WHERE \"IM\" = ? AND num_tarif = ? AND date = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, IM);
+            ps.setString(2, num_tarif);
+            
+            java.sql.Date dateP = java.sql.Date.valueOf(date); 
+            ps.setDate(3, dateP);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+
+            String im = rs.getString("IM");
+            String numTarif = rs.getString("num_tarif");
+            LocalDate datee = rs.getDate("date").toLocalDate();
+
+            payment = new Payer(im, numTarif, datee);
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return payment;
+    }
+    
     //Adding nomConjoint in conjoint Table if Dead 
     public void addConjoint(Personne personne) {
         try {
@@ -537,9 +593,156 @@ public class Model {
         return allPayers;
     }
 
+    //Create the pdf reçu, specify the path where the pdf will appear like(.../MyFolder/)
+    public void createPDF(Payer payment, String path) {
+        Personne person = getPersonne(payment.getIM());
+        Tarif tarif = getTarif(payment.getNum_tarif());
+        
+        Random random = new Random();
+        int randomNumber = random.nextInt(9000) + 1000; // Generates a number between 1000 and 9999
+        path += "recu" + String.valueOf(randomNumber)+ ".pdf"; //Append the random number to the name of the pdf
+
+        String IM = person.getIM();
+        String Nom = person.getNom();
+        String Prenoms = person.getPrénoms();
+        String Mois = payment.getDate().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()); ;
+        String Annee = String.valueOf(payment.getDate().getYear());
+        String Montant = String.valueOf(tarif.getMontant());
+        Montant += " Ar";
+        createPDF(path, IM, Nom, Prenoms, Mois, Annee, Montant);
+    }
+
+    //get all the ages of personne alive
+    public int[] getAllAges() {
+        List<Integer> ages = new ArrayList<>();
+
+        String query = "SELECT EXTRACT(YEAR FROM current_date) - EXTRACT(YEAR FROM datenais) AS age FROM personne WHERE statut != 'decede'";
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                int age = resultSet.getInt("age");
+                ages.add(age);
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
+
+        int[] agesArray = new int[ages.size()];
+        for (int i = 0; i < ages.size(); i++) {
+            agesArray[i] = ages.get(i);
+        }
+
+        return agesArray;
+    }
+
+    //show the histogram of all ages of person
+    public void showHistogram() {
+        createHistogram(getAllAges());
+    }
+
+    //helper for showHistogram()
+    public void createHistogram(int[] data) {
+        SimpleHistogramDataset dataset = new SimpleHistogramDataset("Key");
+        // add bars
+        for(int i=50; i<100; i+=2){
+            SimpleHistogramBin bin = new SimpleHistogramBin(i, i+2, true, false);
+            int count = 0;
+            for(int d: data){
+                if(bin.accepts(d)){
+                    bin.setItemCount(bin.getItemCount()+1);
+                    count++;
+                }
+            }
+            bin.setItemCount(count*2);
+            dataset.addBin(bin);
+        }
+
+
+        JFreeChart histogram = ChartFactory.createHistogram(
+                "Histogramme représentant le nombre de pensionnaires selon leur âge",
+                "Âge",
+                "Nombre de personnes",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false
+        );
+        XYPlot plot = histogram.getXYPlot();
+        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setTickUnit(new NumberTickUnit(1)); // Set the tick unit for the y-axis
+
+        ValueAxis xAxis = plot.getDomainAxis();
+        xAxis.setRange(new Range(50, 100)); // Set the range from 50 to 100
+
+        XYBarRenderer renderer = (XYBarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(0, 102, 204)); // Set the color of the bars using RGB values
+        renderer.setDrawBarOutline(true); // Enable bar outline
+        renderer.setSeriesOutlinePaint(0, Color.BLACK); // Set the color of the bar outline
+
+        renderer.setMargin(0.0);
+        renderer.setShadowVisible(false); // Disable shadow
+        renderer.setBarPainter(new StandardXYBarPainter());
+
+        // Customize plot colors
+        plot.setBackgroundPaint(new Color(230, 230, 230)); // Set the background color of the plot
+        plot.setRangeGridlinePaint(Color.GRAY); 
+        plot.setDomainGridlinePaint(Color.GRAY);
+
+        ChartFrame chartFrame = new ChartFrame("Histogram", histogram);
+        chartFrame.pack();
+        chartFrame.setVisible(true);
+    }
     
+    //helper function for the createPDF(Payer, path)
+    public static void createPDF(String path, String IM, String Nom, String Prenoms, String Mois, String Annee, String Montant) {
+        Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(path));
 
+            document.open();
 
+            // title
+            Paragraph title = new Paragraph("Reçu", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
 
+            document.add(new Chunk("\n")); // a little space
+
+            // table
+            PdfPTable table = new PdfPTable(2); // 2 columns
+
+            // add cells
+            addTableCell(table, "IM", IM);
+            addTableCell(table, "Nom", Nom);
+            addTableCell(table, "Prénoms", Prenoms);
+            addTableCell(table, "Mois", Mois);
+            addTableCell(table, "Année", Annee);
+            addTableCell(table, "Montant", Montant);
+
+            document.add(table);
+            document.close();
+        } catch (DocumentException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //helper function to add cells to the table
+    private static void addTableCell(PdfPTable table, String header, String value) {
+        PdfPCell headerCell = new PdfPCell(new Phrase(header, FontFactory.getFont(FontFactory.HELVETICA_BOLD)));
+        headerCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(headerCell);
+
+        PdfPCell valueCell = new PdfPCell(new Phrase(value));
+        valueCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(valueCell);
+    }
 
 }
