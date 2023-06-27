@@ -98,6 +98,9 @@ public class View {
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
     private static JPanel buttonPanel_Tarif;
+    private static secWin_newPers fenetreModale1;
+    private static secWin_newPay fenetreModale2;
+    private static secWin_newTar fenetreModale3; 
 
 
     private static JButton[] bouttons; // Déclaration du tableau bouttons en tant que variable de classe
@@ -354,23 +357,23 @@ public class View {
     button1_New = new JButton("Nouvelle Personne");
     button1_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPers fenetreModale = new secWin_newPers(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale1 = new secWin_newPers(frame);
+                fenetreModale1.setVisible(true);
             }
         });
     button2_New = new JButton("Nouveau Paiement");
     button2_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPay fenetreModale = new secWin_newPay(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale2 = new secWin_newPay(frame);
+                fenetreModale2.setVisible(true);
             }
         });
     button3_New = new JButton("Nouveau Tarif");
     //secWin_newTar
     button3_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newTar fenetreModale = new secWin_newTar(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale3 = new secWin_newTar(frame);
+                fenetreModale3.setVisible(true);
             }
         });
     button1_New.setPreferredSize(new Dimension(180, 157));
@@ -476,8 +479,8 @@ public class View {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newPay fenetreModale = new secWin_newPay(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale2 = new secWin_newPay(frame);
+            fenetreModale2.setVisible(true);
         }
             }
         });
@@ -677,8 +680,8 @@ private static JPanel createContentPanel3() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newPers fenetreModale = new secWin_newPers(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale1 = new secWin_newPers(frame);
+            fenetreModale1.setVisible(true);
         }
                 
             }
@@ -769,8 +772,8 @@ private static JPanel createContentPanel4() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newTar fenetreModale = new secWin_newTar(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale3 = new secWin_newTar(frame);
+            fenetreModale3.setVisible(true);
         }
                 
             }
@@ -1157,4 +1160,16 @@ public static JButton getHistoG(){
     return histogrammeButton ;
 }
 
+//getters anle instance anle fenetre modals
+public static secWin_newPers getWinPers(){
+    return fenetreModale1;
+}
+public static secWin_newPay getWinPay(){
+    return fenetreModale2;
+}
+public static secWin_newTar getWinTarif(){
+    return fenetreModale3;
+}
+
+//ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
