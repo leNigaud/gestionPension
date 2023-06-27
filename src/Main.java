@@ -1,31 +1,22 @@
 import java.time.LocalDate;
+
+import Controller.*;
 import Model.*;
+import View.View;
 import Data.*;
 
 public class Main {
 
 public static void main(String[] args) {
 
-    Model model = new Model();
-    // Initialize DAO implementation
-    PersonneDAO personneDAO = new PersonneDAO(model);
-
-    // Create a new Personne object
-    Personne newPersonne = new Personne(
-        "12345", // IM
-        "Smith", // Nom
-        "John", // Prénoms
-        LocalDate.of(1990, 1, 1), // Date de naissance
-        "Diploma XYZ", // Diplome
-        "123-456-7890", // Contact
-        "Status A", // Statut
-        "Situation A", // Situation
-        "Doe", // Nom du conjoint
-        "Jane" // Prénom du conjoint
-    );
-
-    // Add this Personne to the database
-    personneDAO.addPersonne(newPersonne);
-}
+       // Instanciation du modèle
+        Model model = new Model();
+        
+        // Instanciation de la vue
+        View view = new View();
+        
+        // Instanciation du contrôleur et liaison avec le modèle et la vue
+        Controller controller = new Controller(view, model);
+    }
 
 }

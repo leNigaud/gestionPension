@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.Border;
 import java.time.LocalDate;
@@ -27,6 +29,7 @@ public class View {
     private static JPanel contentPanel3_New;
     private static JPanel contentPanel4_New;
     private static JLabel label_New;
+    private static JButton infoTar;
     private static JButton button1_New;
     private static JButton button2_New;
     private static JButton button3_New;
@@ -62,7 +65,8 @@ public class View {
     private static JPanel labelPanel_Pay;
     private static String[] columnNames_Pay;
     private static Object[][] data_Pay;
-    private static JTable table_Pay;
+    private static DefaultTableModel modelPay;
+    private static JTable table_Pay = new JTable(modelPay);
     private static JTableHeader header_Pay;
     private static JPanel tablePanel_Pay;
 
@@ -86,8 +90,10 @@ public class View {
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
-    private static JTable table_Pers;
+    private DefaultTableModel modelPers;
+    private static JTable table_Pers= new JTable(modelPay);;
     private static JTableHeader header_Pers;
+
 
     //variable miasa amle contenu an'ny bouton tarif
     private static JPanel panel_Tarif;
@@ -96,17 +102,116 @@ public class View {
     private static JButton supprimerButton_Tarif;
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
-    private static JTable table_Tarif;
+    private static DefaultTableModel modelTarif;
+    private static JTable table_Tarif= new JTable(modelTarif);
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
     private static JPanel buttonPanel_Tarif;
 
 
-    private static JButton[] bouttons; // Déclaration du tableau bouttons en tant que variable de classe
+    public static JButton[] bouttons ; // Déclaration du tableau bouttons en tant que variable de classe
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
     private static JButton histogrammeButton ;
+    public Object get;
+    
+    public View() {
+        SwingUtilities.invokeLater(() -> {
+            // Création de la fenêtre
+            frame = new JFrame("Pension Manager");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+            // Définition de la taille de la fenêtre
+            frame.setSize(1366, 768);
+    
+            // Empêcher la redimension de la fenêtre
+            frame.setResizable(false);
+    
+            // Centre la fenêtre sur l'écran
+            frame.setLocationRelativeTo(null);
+    
+            // Création des deux JPanel
+            leftPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    setBackground(Color.WHITE);
+                }
+            };
+            rightPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    setBackground(Color.WHITE);
+                }};
+            rightPanel.setLayout(new BorderLayout());
+    
+            // Calcul de la taille des panneaux
+            int panelWidth = frame.getWidth() / 5;
+            int panelHeight = frame.getHeight();
+    
+            // Définition des tailles des panneaux
+            leftPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+            rightPanel.setPreferredSize(new Dimension(frame.getWidth() - panelWidth, panelHeight));
+    
+            //mampiditra ny contenu an'ny rightpanel vo manomboka
+            rightPanel.add(createContentPanel4(), BorderLayout.CENTER);
+            rightPanel.removeAll();
+            rightPanel.add(createContentPanel3(), BorderLayout.CENTER);
+            rightPanel.removeAll();
+            rightPanel.add(createContentPanel2(), BorderLayout.CENTER);
+            rightPanel.removeAll();
+            rightPanel.add(createContentPanel1(), BorderLayout.CENTER);
+    
+            // Layout de la fenêtre
+            frame.setLayout(new BorderLayout());
+    
+            // Ajout des panneaux à la fenêtre
+            frame.add(leftPanel, BorderLayout.WEST);
+            frame.add(rightPanel, BorderLayout.CENTER);
+    
+            bouttons = new JButton[5];
+    
+            // Création du bouton "Nouveau"
+            JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
+            bouttons[0] = nouveauButton;
+    
+            // Ajout du bouton "Nouveau" au panel de gauche
+            leftPanel.add(nouveauButton);
+    
+            // Création du label "Liste"
+            JLabel listeLabel = createStyledLabel("Liste", panelWidth, 57);
+    
+            // Ajout du label "Liste" au panel de gauche
+            leftPanel.add(listeLabel);
+    
+            // Création des boutons supplémentaires
+            for (int i = 0; i < 3; i++) {
+                String buttonText = "";
+                if (i == 0) {
+                    buttonText = "Paiement";
+                } else if (i == 1) {
+                    buttonText = "Personne";
+                } else if (i == 2) {
+                    buttonText = "Tarif";
+                }
+                JButton button = createStyledButton(buttonText, panelWidth * 3 / 4, 57);
+                bouttons[i + 1] = button;
+                leftPanel.add(button);
+            }
+    
+            // Création du bouton "Histogramme"
+            histogrammeButton = createStyledButton("Histogramme", panelWidth, 57);
+            bouttons[4] = histogrammeButton;
+    
+            // Ajout du bouton "Histogramme" au panel de gauche
+            leftPanel.add(histogrammeButton);
+    
+            // Affichage de la fenêtre
+            frame.setVisible(true);
+        });
+    }
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -128,103 +233,6 @@ public class View {
 }
 
 
-    public View() {
-        SwingUtilities.invokeLater(() -> {
-            // Création de la fenêtre
-            frame = new JFrame("Pension Manager");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            // Définition de la taille de la fenêtre
-            frame.setSize(1366, 768);
-
-            // Empêcher la redimension de la fenêtre
-            frame.setResizable(false);
-
-            // Centre la fenêtre sur l'écran
-            frame.setLocationRelativeTo(null);
-
-            // Création des deux JPanel
-            leftPanel = new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    setBackground(Color.WHITE);
-                }
-            };
-            rightPanel = new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    setBackground(Color.WHITE);
-                }};
-            rightPanel.setLayout(new BorderLayout());
-
-            // Calcul de la taille des panneaux
-            int panelWidth = frame.getWidth() / 5;
-            int panelHeight = frame.getHeight();
-
-            // Définition des tailles des panneaux
-            leftPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-            rightPanel.setPreferredSize(new Dimension(frame.getWidth() - panelWidth, panelHeight));
-
-            //mampiditra ny contenu an'ny rightpanel vo manomboka
-            rightPanel.add(createContentPanel4(), BorderLayout.CENTER);
-            rightPanel.removeAll();
-            rightPanel.add(createContentPanel3(), BorderLayout.CENTER);
-            rightPanel.removeAll();
-            rightPanel.add(createContentPanel2(), BorderLayout.CENTER);
-            rightPanel.removeAll();
-            rightPanel.add(createContentPanel1(), BorderLayout.CENTER);
-
-            // Layout de la fenêtre
-            frame.setLayout(new BorderLayout());
-
-            // Ajout des panneaux à la fenêtre
-            frame.add(leftPanel, BorderLayout.WEST);
-            frame.add(rightPanel, BorderLayout.CENTER);
-
-            //tableau des boutons
-            bouttons = new JButton[5];
-
-            // Création du bouton "Nouveau"
-            JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
-            bouttons[0] = nouveauButton;
-
-            // Ajout du bouton "Nouveau" au panel de gauche
-            leftPanel.add(nouveauButton);
-
-            // Création du label "Liste"
-            JLabel listeLabel = createStyledLabel("Liste", panelWidth, 57);
-
-            // Ajout du label "Liste" au panel de gauche
-            leftPanel.add(listeLabel);
-
-            // Création des boutons supplémentaires
-            for (int i = 0; i < 3; i++) {
-                String buttonText = "";
-                if (i == 0) {
-                    buttonText = "Paiement";
-                } else if (i == 1) {
-                    buttonText = "Personne";
-                } else if (i == 2) {
-                    buttonText = "Tarif";
-                }
-                JButton button = createStyledButton(buttonText, panelWidth * 3 / 4, 57);
-                bouttons[i + 1] = button;
-                leftPanel.add(button);
-            }
-
-            // Création du bouton "Histogramme"
-            histogrammeButton = createStyledButton("Histogramme", panelWidth, 57);
-            bouttons[4] = histogrammeButton;
-
-            // Ajout du bouton "Histogramme" au panel de gauche
-            leftPanel.add(histogrammeButton);
-
-            // Affichage de la fenêtre
-            frame.setVisible(true);
-        });
-    }
 
     // Crée un bouton stylisé avec les caractéristiques spécifiées
     private static JButton createStyledButton(String text, int width, int height) {
@@ -308,113 +316,122 @@ public class View {
 
     // Crée le contenu du rightPanel
     private static JPanel createContentPanel1() {
-    contentPanel_New = new JPanel() {
+        
+        contentPanel_New = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    setBackground(Color.WHITE);
+         }};
+        contentPanel_New.setLayout(new BoxLayout(contentPanel_New, BoxLayout.X_AXIS));
+        
+        contentPanel1_New =  new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    setBackground(Color.WHITE);
+        }};
+        contentPanel1_New.setLayout(new BoxLayout(contentPanel1_New, BoxLayout.Y_AXIS));
+        
+        contentPanel2_New =  new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    contentPanel_New.setLayout(new BoxLayout(contentPanel_New, BoxLayout.X_AXIS));
-    contentPanel1_New =  new JPanel() {
+        contentPanel2_New.setLayout(new FlowLayout(FlowLayout.LEFT));
+        contentPanel2_New.setPreferredSize(new Dimension(contentPanel2_New.getWidth(), 70));
+        
+        contentPanel3_New =  new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
-                }};
-    contentPanel1_New.setLayout(new BoxLayout(contentPanel1_New, BoxLayout.Y_AXIS));
-    contentPanel2_New =  new JPanel() {
+        }};
+        
+        contentPanel4_New =  new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
-                }};
-    contentPanel2_New.setLayout(new FlowLayout(FlowLayout.LEFT));
-    contentPanel2_New.setPreferredSize(new Dimension(contentPanel2_New.getWidth(), 70));
-    contentPanel3_New =  new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    setBackground(Color.WHITE);
-                }};
-    contentPanel4_New =  new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    setBackground(Color.WHITE);
-                }};
+        }};
 
-    label_New = new JLabel("Nouveau");
-    label_New.setPreferredSize(new Dimension(200, 60));
-    labelFont_New = new Font("Bookman Old Style", Font.PLAIN, 30);
-    labelColor_New = new Color(176, 224, 230);
-    label_New.setFont(labelFont_New);
-    label_New.setForeground(labelColor_New);
+        label_New = new JLabel("Nouveau");
+        label_New.setPreferredSize(new Dimension(200, 60));
+        labelFont_New = new Font("Bookman Old Style", Font.PLAIN, 30);
+        labelColor_New = new Color(176, 224, 230);
+        label_New.setFont(labelFont_New);
+        label_New.setForeground(labelColor_New);
 
-    contentPanel2_New.add(label_New);
-    contentPanel1_New.add(contentPanel2_New);
+        contentPanel2_New.add(label_New);
+        contentPanel1_New.add(contentPanel2_New);
 
-    button1_New = new JButton("Nouvelle Personne");
-    button1_New.addActionListener(new ActionListener() {
+        button1_New = new JButton("Nouvelle Personne");
+        button1_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 secWin_newPers fenetreModale = new secWin_newPers(frame);
                 fenetreModale.setVisible(true);
             }
         });
-    button2_New = new JButton("Nouveau Paiement");
-    button2_New.addActionListener(new ActionListener() {
+    
+        button2_New = new JButton("Nouveau Paiement");
+        button2_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 secWin_newPay fenetreModale = new secWin_newPay(frame);
                 fenetreModale.setVisible(true);
             }
         });
-    button3_New = new JButton("Nouveau Tarif");
-    //secWin_newTar
-    button3_New.addActionListener(new ActionListener() {
+    
+        button3_New = new JButton("Nouveau Tarif");
+        //secWin_newTar
+        button3_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 secWin_newTar fenetreModale = new secWin_newTar(frame);
                 fenetreModale.setVisible(true);
             }
         });
-    button1_New.setPreferredSize(new Dimension(180, 157));
-    button2_New.setPreferredSize(new Dimension(180, 157));
-    button3_New.setPreferredSize(new Dimension(180, 157));
-    button1_New.setBackground(new Color(176, 224, 230));
-    button2_New.setBackground(new Color(176, 224, 230));
-    button3_New.setBackground(new Color(176, 224, 230));
-    buttonFont_New = new Font("Bookman Old Style", Font.BOLD, 15);
-    textColor_New = Color.WHITE;
-    button1_New.setFont(buttonFont_New);
-    button1_New.setForeground(textColor_New);
-    button2_New.setFont(buttonFont_New);
-    button2_New.setForeground(textColor_New);
-    button3_New.setFont(buttonFont_New);
-    button3_New.setForeground(textColor_New);
 
-    icon1_New = new ImageIcon("sary1.png");
-    icon2_New = new ImageIcon("sary2.png");
-    icon3_New = new ImageIcon("sary3.png");
-    button1_New.setIcon(icon1_New);
-    button1_New.setVerticalTextPosition(SwingConstants.BOTTOM);
-    button1_New.setHorizontalTextPosition(SwingConstants.CENTER);
-    button2_New.setIcon(icon2_New);
-    button2_New.setVerticalTextPosition(SwingConstants.BOTTOM);
-    button2_New.setHorizontalTextPosition(SwingConstants.CENTER);
-    button3_New.setIcon(icon3_New);
-    button3_New.setVerticalTextPosition(SwingConstants.BOTTOM);
-    button3_New.setHorizontalTextPosition(SwingConstants.CENTER);
 
-    contentPanel_New.add(Box.createHorizontalGlue());
-    contentPanel_New.add(button1_New);
-    contentPanel_New.add(Box.createHorizontalGlue());
-    contentPanel_New.add(button2_New);
-    contentPanel_New.add(Box.createHorizontalGlue());
-    contentPanel_New.add(button3_New);
-    contentPanel_New.add(Box.createHorizontalGlue());
+        button1_New.setPreferredSize(new Dimension(180, 157));
+        button2_New.setPreferredSize(new Dimension(180, 157));
+        button3_New.setPreferredSize(new Dimension(180, 157));
+        button1_New.setBackground(new Color(176, 224, 230));
+        button2_New.setBackground(new Color(176, 224, 230));
+        button3_New.setBackground(new Color(176, 224, 230));
+        buttonFont_New = new Font("Bookman Old Style", Font.BOLD, 15);
+        textColor_New = Color.WHITE;
+        button1_New.setFont(buttonFont_New);
+        button1_New.setForeground(textColor_New);
+        button2_New.setFont(buttonFont_New);
+        button2_New.setForeground(textColor_New);
+        button3_New.setFont(buttonFont_New);
+        button3_New.setForeground(textColor_New);
 
-    contentPanel_New.add(Box.createVerticalGlue());
-    contentPanel1_New.add(contentPanel_New);
-    contentPanel1_New.add(contentPanel3_New);
-    contentPanel1_New.add(contentPanel4_New);
+        icon1_New = new ImageIcon("sary1.png");
+        icon2_New = new ImageIcon("sary2.png");
+        icon3_New = new ImageIcon("sary3.png");
+        button1_New.setIcon(icon1_New);
+        button1_New.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button1_New.setHorizontalTextPosition(SwingConstants.CENTER);
+        button2_New.setIcon(icon2_New);
+        button2_New.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button2_New.setHorizontalTextPosition(SwingConstants.CENTER);
+        button3_New.setIcon(icon3_New);
+        button3_New.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button3_New.setHorizontalTextPosition(SwingConstants.CENTER);
+
+        contentPanel_New.add(Box.createHorizontalGlue());
+        contentPanel_New.add(button1_New);
+        contentPanel_New.add(Box.createHorizontalGlue());
+        contentPanel_New.add(button2_New);
+        contentPanel_New.add(Box.createHorizontalGlue());
+        contentPanel_New.add(button3_New);
+        contentPanel_New.add(Box.createHorizontalGlue());
+
+        contentPanel_New.add(Box.createVerticalGlue());
+        contentPanel1_New.add(contentPanel_New);
+        contentPanel1_New.add(contentPanel3_New);
+        contentPanel1_New.add(contentPanel4_New);
 
     return contentPanel1_New;
 }
@@ -428,7 +445,7 @@ public class View {
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
-                }};
+    }};
     contentPanel_Pay.setLayout(new BoxLayout(contentPanel_Pay, BoxLayout.PAGE_AXIS));
 
     topPanel_Pay =  new JPanel() {
@@ -465,24 +482,25 @@ public class View {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
         int selectedRow = table_Pay.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Pay.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
+            if (selectedRow != -1) {
+                // Récupérer les données de la ligne sélectionnée
+                TableModel model = table_Pay.getModel();
+                int columnCount = model.getColumnCount();
+                String[] rowData = new String[columnCount];
 
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
+                for (int i = 0; i < columnCount; i++) {
+                    rowData[i] = model.getValueAt(selectedRow, i).toString();
+                }
+
+                // Utiliser le tableau de données (rowData) comme vous le souhaitez
+                // ...
+                rowNow = rowData;
+                secWin_newPay fenetreModale = new secWin_newPay(frame);
+                fenetreModale.setVisible(true);
             }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            secWin_newPay fenetreModale = new secWin_newPay(frame);
-            fenetreModale.setVisible(true);
-        }
             }
         });
+    
     delBut_Pay = new JButton("Supprimer");
     
     recu_Pay = new JButton("Générer un reçu");
@@ -520,7 +538,8 @@ public class View {
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
-                }};
+    }};
+    
     labelPanel_Pay.setLayout(new FlowLayout(FlowLayout.LEFT));
     labelPanel_Pay.add(label_Pay);
 
@@ -552,17 +571,17 @@ public class View {
     table_Pay.setRowHeight(25);
     table_Pay.setGridColor(new Color(176, 224, 230));
     table_Pay.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            String[] rowData = getSelectedRowData(table_Pay);
-            
-            if (rowData != null) {
-                rowNow = rowData;
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (!e.getValueIsAdjusting()) {
+                String[] rowData = getSelectedRowData(table_Pay);
+
+                if (rowData != null) {
+                    rowNow = rowData;
+                }
             }
         }
-    }
-});
+    });
 
 
     tablePanel_Pay = new JPanel(new BorderLayout());
@@ -867,7 +886,7 @@ public static JLabel getLabel_New() {
 }
 
 public static JButton getButton1_New() {
-    return button1_New;
+    return infoTar;
 }
 
 public static JButton getButton2_New() {
@@ -1157,6 +1176,21 @@ public static JTable getTable_Tarif() {
 //#bouton histogramme
 public static JButton getHistoG(){
     return histogrammeButton ;
+}
+
+
+public static JButton[] getBouttons() {
+    return bouttons;
+}
+
+
+ // Méthodes pour ajouter des écouteurs d'événements
+public void addReadListener(ActionListener listener) {
+    
+    for (int i=0;i<5;i++) {
+        bouttons[i].addActionListener(listener);
+    }
+        
 }
 
 }
