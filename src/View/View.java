@@ -120,7 +120,7 @@ public class View {
         for (int column = 0; column < columnCount; column++) {
             Object value = model.getValueAt(selectedRow, column);
             rowData[column] = value != null ? value.toString() : "";
-        }
+        } 
         
         return rowData;
     }
