@@ -1,3 +1,5 @@
+package View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -126,7 +128,7 @@ public class View {
 }
 
 
-    public static void main(String[] args) {
+    public View() {
         SwingUtilities.invokeLater(() -> {
             // Création de la fenêtre
             frame = new JFrame("Pension Manager");
