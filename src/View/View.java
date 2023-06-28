@@ -107,6 +107,9 @@ public class View {
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
     private static JPanel buttonPanel_Tarif;
+    private static secWin_newPers fenetreModale1;
+    private static secWin_newPay fenetreModale2;
+    private static secWin_newTar fenetreModale3; 
 
 
     public static JButton[] bouttons ; // Déclaration du tableau bouttons en tant que variable de classe
@@ -224,7 +227,7 @@ public class View {
         for (int column = 0; column < columnCount; column++) {
             Object value = model.getValueAt(selectedRow, column);
             rowData[column] = value != null ? value.toString() : "";
-        }
+        } 
         
         return rowData;
     }
@@ -369,16 +372,16 @@ public class View {
         button1_New = new JButton("Nouvelle Personne");
         button1_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPers fenetreModale = new secWin_newPers(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale1 = new secWin_newPers(frame);
+                fenetreModale1.setVisible(true);
             }
         });
     
         button2_New = new JButton("Nouveau Paiement");
         button2_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPay fenetreModale = new secWin_newPay(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale2 = new secWin_newPay(frame);
+                fenetreModale2.setVisible(true);
             }
         });
     
@@ -386,8 +389,8 @@ public class View {
         //secWin_newTar
         button3_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newTar fenetreModale = new secWin_newTar(frame);
-                fenetreModale.setVisible(true);
+                fenetreModale3 = new secWin_newTar(frame);
+                fenetreModale3.setVisible(true);
             }
         });
 
@@ -698,8 +701,8 @@ private static JPanel createContentPanel3() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newPers fenetreModale = new secWin_newPers(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale1 = new secWin_newPers(frame);
+            fenetreModale1.setVisible(true);
         }
                 
             }
@@ -790,8 +793,8 @@ private static JPanel createContentPanel4() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newTar fenetreModale = new secWin_newTar(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale3 = new secWin_newTar(frame);
+            fenetreModale3.setVisible(true);
         }
                 
             }
@@ -1183,13 +1186,69 @@ public static JButton[] getBouttons() {
     return bouttons;
 }
 
+//getters anle instance anle fenetre modals
+public static secWin_newPers getWinPers(){
+    return fenetreModale1;
+}
+public static secWin_newPay getWinPay(){
+    return fenetreModale2;
+}
+public static secWin_newTar getWinTarif(){
+    return fenetreModale3;
+}
 
- // Méthodes pour ajouter des écouteurs d'événements
-public void addReadListener(ActionListener listener) {
-    for (int i=0;i<5;i++) {
-        bouttons[i].addActionListener(listener);
-    }
+//ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
+
+
+
+ // Méthodes pour ajouter des écouteurs d'événements aux boutons menus 
+public void addReadListener_BouttonPay(ActionListener listener) {
+    
+        bouttons[1].addActionListener(listener);
+    
         
 }
+public void addReadListener_BouttonPers(ActionListener listener) {
+    
+        bouttons[2].addActionListener(listener);
+    
+        
+}
+public void addReadListener_BouttonTar(ActionListener listener) {
+    
+        bouttons[3].addActionListener(listener);
+    
+        
+}
+public void addReadListener_BouttonHis(ActionListener listener) {
+    
+        bouttons[4].addActionListener(listener);
+    
+        
+}
+
+// Méthodes pour ajouter des écouteurs d'événements aux boutons ajouter dans chaque sous fenetre nouveau
+    //Nouve paiements
+    public void addReadListener_BouttonAjouterPay(ActionListener listener) {
+
+            secWin_newPay.getAjouterButton().addActionListener(listener);
+
+
+    }
+
+    public void addReadListener_BouttonAjouterPers(ActionListener listener) {
+
+            secWin_newPers.getAjouterButton().addActionListener(listener);
+
+
+    }
+
+    public void addReadListener_BouttonAjouterTar(ActionListener listener) {
+
+            secWin_newTar.getAjouterButton().addActionListener(listener);
+
+
+    }
+
 
 }
