@@ -10,6 +10,8 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import Data.*;
+import Model.*;
 
 
 public class View {
@@ -129,7 +131,7 @@ public class View {
 }
 
 
-    public static void main(String[] args) {
+    public View() {
         SwingUtilities.invokeLater(() -> {
             // Création de la fenêtre
             frame = new JFrame("Pension Manager");
