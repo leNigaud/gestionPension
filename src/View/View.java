@@ -1186,7 +1186,6 @@ public static JButton[] getBouttons() {
 
  // Méthodes pour ajouter des écouteurs d'événements
 public void addReadListener(ActionListener listener) {
-    
     for (int i=0;i<5;i++) {
         bouttons[i].addActionListener(listener);
     }

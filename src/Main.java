@@ -13,7 +13,7 @@ public static void main(String[] args) {
         Model model = new Model();
         
         // Instanciation de la vue
-        View view = new View();
+      View view = new View();
         
         // Instanciation du contrôleur et liaison avec le modèle et la vue
         Controller controller = new Controller(view, model);
