@@ -15,10 +15,10 @@ import javax.swing.event.ListSelectionListener;
 
 
 class secWin_newPay extends JDialog {
-    private static JSpinner.DateEditor DateEditor_Pay;
-    private static JSpinner DateSpinner_Pay;
-    private static JTextField[] textFields;
-    private static JButton ajouterButton;
+    private static JSpinner DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
+    private static JSpinner.DateEditor DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
+    private static JTextField[] textFields = new JTextField[10];
+    private static JButton ajouterButton = new JButton("Ajouter");
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
     public secWin_newPay(Frame parent) {
@@ -34,7 +34,6 @@ class secWin_newPay extends JDialog {
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
         String[] nomchamp = {"IM", "numero de tarif","date"};
-        textFields = new JTextField[10];
         for (int i = 0; i < 3; i++) {
             JLabel label = new JLabel(nomchamp[i]); 
             label.setFont(new Font("Bookman Old Style", Font.PLAIN, 15));
@@ -44,8 +43,6 @@ class secWin_newPay extends JDialog {
             contentPanel.add(label, constraints);
 
             if(i==2){
-                DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
-                DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
                 DateSpinner_Pay.setEditor(DateEditor_Pay);
                 constraints.gridx = 1;
                 contentPanel.add(DateSpinner_Pay, constraints);
@@ -58,9 +55,7 @@ class secWin_newPay extends JDialog {
         }
 
         JPanel buttonPanel = new JPanel();
-        String aj = "Ajouter";
-        if(View.rowNow != null){aj = "Modifier"; View.rowNow = null;}
-        ajouterButton = new JButton(aj);
+        
         ajouterButton.setBackground(new Color(176, 224, 230));
         ajouterButton.setForeground(Color.WHITE);
         ajouterButton.setFont(ajouterButton.getFont().deriveFont(15f));
@@ -86,8 +81,8 @@ class secWin_newPay extends JDialog {
     }
 
 //tableau de type zone de texte de taille = 2 // lay zone de texte roa
-    public static JTextField[] getTextFields() {
-    return textFields;
+    public static JTextField getTextFields(int i) {
+    return textFields[i];
 }
 
 //maka anlay composant fanaovana saisis de date

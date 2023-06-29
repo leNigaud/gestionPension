@@ -12,13 +12,21 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import Data.*;
+import Model.*;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+//date ; zone de texte ; checkbox; tableau
 
 public class View {
 
     //declaration anle frame
     public static JFrame frame;
     public static String[] rowNow;
+    
+    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
+    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
+    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame);
 
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
@@ -27,9 +35,9 @@ public class View {
     private static JPanel contentPanel3_New;
     private static JPanel contentPanel4_New;
     private static JLabel label_New;
-    private static JButton button1_New;
-    private static JButton button2_New;
-    private static JButton button3_New;
+    private static JButton button1_New = new JButton("Nouvelle Personne");
+    private static JButton button2_New = new JButton("Nouveau Paiement");
+    private static JButton button3_New = new JButton("Nouveau Tarif");
     private static Font labelFont_New;
     private static Color labelColor_New;
     private static Font buttonFont_New;
@@ -42,18 +50,18 @@ public class View {
     //variable miasa ao @methode mampiditra contenu an'ny paiement
     private static JPanel contentPanel_Pay;
     private static JPanel topPanel_Pay;
-    private static JSpinner startDateSpinner_Pay;
-    private static JSpinner endDateSpinner_Pay;
-    private static JSpinner.DateEditor startDateEditor_Pay;
-    private static JSpinner.DateEditor endDateEditor_Pay;
+    private static JSpinner startDateSpinner_Pay = new JSpinner(new SpinnerDateModel());;
+    private static JSpinner endDateSpinner_Pay = new JSpinner(new SpinnerDateModel());;
+    private static JSpinner.DateEditor startDateEditor_Pay = new JSpinner.DateEditor(startDateSpinner_Pay, "dd/MM/yyyy");;
+    private static JSpinner.DateEditor endDateEditor_Pay = new JSpinner.DateEditor(endDateSpinner_Pay, "dd/MM/yyyy");;
     private static Font dateFont_Pay;
     private static Color dateForeground_Pay;
     private static Color dateBackground_Pay;
     private static Border dateBorder_Pay;
-    private static JButton filterPay;
-    private static JButton modifBut_Pay;
-    private static JButton delBut_Pay;
-    private static JButton recu_Pay;
+    private static JButton filterPay = new JButton("Filtrer");
+    private static JButton modifBut_Pay = new JButton("Modifier");
+    private static JButton delBut_Pay = new JButton("Supprimer");
+    private static JButton recu_Pay = new JButton("Genrer un reçu");
     private static JLabel label_Pay;
     private static JLabel label1_Pay;
     private static JLabel label2_Pay;
@@ -71,18 +79,18 @@ public class View {
     private static GridBagConstraints gbc_Pers;
     private static JLabel label_Pers;
     private static JPanel searchPanel_Pers;
-    private static JTextField searchField_Pers;
-    private static JButton searchButton_Pers;
+    private static JTextField searchField_Pers = new JTextField(20);
+    private static JButton searchButton_Pers = new JButton("Rechercher");
     private static Font buttonFont_Pay_Pers;
     private static Color buttonForeground_Pay_Pers;
     private static Color buttonBackground_Pay_Pers;
     private static JPanel checkboxFilterPanel_Pers;
-    private static JCheckBox checkboxMort_Pers;
-    private static JCheckBox checkboxVivant_Pers;
-    private static JButton filterButton_Pers;
+    private static JCheckBox checkboxMort_Pers = new JCheckBox("Mort");
+    private static JCheckBox checkboxVivant_Pers = new JCheckBox("Vivant");
+    private static JButton filterButton_Pers = new JButton("Filtrer");
     private static JPanel buttonPanel_Pers;
-    private static JButton modifyButton_Pers;
-    private static JButton deleteButton_Pers;
+    private static JButton modifyButton_Pers = new JButton("Modifier");
+    private static JButton deleteButton_Pers = new JButton("Supprimer");
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
@@ -92,8 +100,8 @@ public class View {
     //variable miasa amle contenu an'ny bouton tarif
     private static JPanel panel_Tarif;
     private static JLabel label_Tarif;
-    private static JButton modifierButton_Tarif;
-    private static JButton supprimerButton_Tarif;
+    private static JButton modifierButton_Tarif = new JButton("Modifier");
+    private static JButton supprimerButton_Tarif = new JButton("Supprimer");
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
     private static JTable table_Tarif;
@@ -106,7 +114,7 @@ public class View {
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
-    private static JButton histogrammeButton ;
+    private static JButton histogrammeButton  = new JButton("Histogramme") ;
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -119,7 +127,7 @@ public class View {
         for (int column = 0; column < columnCount; column++) {
             Object value = model.getValueAt(selectedRow, column);
             rowData[column] = value != null ? value.toString() : "";
-        }
+        } 
         
         return rowData;
     }
@@ -353,26 +361,25 @@ public class View {
     contentPanel2_New.add(label_New);
     contentPanel1_New.add(contentPanel2_New);
 
-    button1_New = new JButton("Nouvelle Personne");
+    
     button1_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPers fenetreModale = new secWin_newPers(frame);
-                fenetreModale.setVisible(true);
+                
+                fenetreModale1.setVisible(true);
             }
         });
-    button2_New = new JButton("Nouveau Paiement");
+    
     button2_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newPay fenetreModale = new secWin_newPay(frame);
-                fenetreModale.setVisible(true);
+                
+                fenetreModale2.setVisible(true);
             }
         });
-    button3_New = new JButton("Nouveau Tarif");
     //secWin_newTar
     button3_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                secWin_newTar fenetreModale = new secWin_newTar(frame);
-                fenetreModale.setVisible(true);
+                
+                fenetreModale3.setVisible(true);
             }
         });
     button1_New.setPreferredSize(new Dimension(180, 157));
@@ -439,10 +446,7 @@ public class View {
                 }};
     topPanel_Pay.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-    startDateSpinner_Pay = new JSpinner(new SpinnerDateModel());
-    endDateSpinner_Pay = new JSpinner(new SpinnerDateModel());
-    startDateEditor_Pay = new JSpinner.DateEditor(startDateSpinner_Pay, "dd/MM/yyyy");
-    endDateEditor_Pay = new JSpinner.DateEditor(endDateSpinner_Pay, "dd/MM/yyyy");
+   
     startDateSpinner_Pay.setEditor(startDateEditor_Pay);
     endDateSpinner_Pay.setEditor(endDateEditor_Pay);
 
@@ -459,8 +463,6 @@ public class View {
     endDateSpinner_Pay.setBackground(dateBackground_Pay);
     endDateSpinner_Pay.setBorder(dateBorder_Pay);
 
-    filterPay = new JButton("Filtrer");
-    modifBut_Pay = new JButton("Modifier");
     modifBut_Pay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -478,14 +480,12 @@ public class View {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newPay fenetreModale = new secWin_newPay(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale2 = new secWin_newPay(frame);
+            fenetreModale2.setVisible(true);
         }
             }
         });
-    delBut_Pay = new JButton("Supprimer");
     
-    recu_Pay = new JButton("Générer un reçu");
 
     Font buttonFont_Pay = new Font("Bookman Old Style", Font.PLAIN, 20);
     Color buttonForeground_Pay = Color.WHITE;
@@ -603,13 +603,11 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    searchField_Pers = new JTextField(20);
     searchField_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     searchField_Pers.setForeground(Color.BLACK);
     searchField_Pers.setBackground(Color.WHITE);
     searchField_Pers.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     searchField_Pers.setPreferredSize(new Dimension(200, 30));
-    searchButton_Pers = new JButton("Rechercher");
     buttonFont_Pay_Pers = new Font("Bookman Old Style", Font.PLAIN, 20);
     buttonForeground_Pay_Pers = Color.WHITE;
     buttonBackground_Pay_Pers = new Color(176, 224, 230);
@@ -630,8 +628,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    checkboxMort_Pers = new JCheckBox("Mort");
-    checkboxVivant_Pers = new JCheckBox("Vivant");
     checkboxMort_Pers.setForeground(buttonBackground_Pay_Pers);
     checkboxVivant_Pers.setForeground(buttonBackground_Pay_Pers);
     checkboxMort_Pers.setFont(buttonFont_Pay_Pers);
@@ -645,7 +641,6 @@ private static JPanel createContentPanel3() {
     checkboxFilterPanel_Pers.add(checkboxMort_Pers);
     checkboxFilterPanel_Pers.add(checkboxVivant_Pers);
     checkboxFilterPanel_Pers.add(Box.createHorizontalStrut(10)); // Espacement entre les checkboxes et le bouton "Filtrer"
-    filterButton_Pers = new JButton("Filtrer");
     filterButton_Pers.setFont(buttonFont_Pay_Pers);
     filterButton_Pers.setForeground(buttonForeground_Pay_Pers);
     filterButton_Pers.setBackground(buttonBackground_Pay_Pers);
@@ -661,7 +656,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    modifyButton_Pers = new JButton("Modifier");
     modifyButton_Pers.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -679,13 +673,12 @@ private static JPanel createContentPanel3() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newPers fenetreModale = new secWin_newPers(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale1 = new secWin_newPers(frame);
+            fenetreModale1.setVisible(true);
         }
                 
             }
         });
-    deleteButton_Pers = new JButton("Supprimer");
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
@@ -753,7 +746,6 @@ private static JPanel createContentPanel4() {
     label_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 30));
     label_Tarif.setForeground(new Color(176, 224, 230));
 
-    modifierButton_Tarif = new JButton("Modifier");
     modifierButton_Tarif.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -771,8 +763,8 @@ private static JPanel createContentPanel4() {
             // Utiliser le tableau de données (rowData) comme vous le souhaitez
             // ...
             rowNow = rowData;
-            secWin_newTar fenetreModale = new secWin_newTar(frame);
-            fenetreModale.setVisible(true);
+            fenetreModale3 = new secWin_newTar(frame);
+            fenetreModale3.setVisible(true);
         }
                 
             }
@@ -781,7 +773,6 @@ private static JPanel createContentPanel4() {
     modifierButton_Tarif.setForeground(Color.WHITE);
     modifierButton_Tarif.setBackground(new Color(176, 224, 230));
 
-    supprimerButton_Tarif = new JButton("Supprimer");
     
     supprimerButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     supprimerButton_Tarif.setForeground(Color.WHITE);
@@ -839,6 +830,15 @@ private static JPanel createContentPanel4() {
 
     return panel_Tarif;
 }
+
+
+//methode manao update anle table hita maso eo .. afaka modifier-na raha tsy mety
+public void updateTableData(Object[][] newData, JTable table,String[] columnNames) {
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    model.setDataVector(newData, columnNames);
+}
+
+
 
 
 //getters
@@ -1090,7 +1090,7 @@ public static JButton getDelBut_Pay() {
 }
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
 public static boolean afficherQuestionOuiNon() {
-    int choix = JOptionPane.showOptionDialog(null, "Vouleé-vous vraiment supprimer cette ligne ?", "Suppression", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+    int choix = JOptionPane.showOptionDialog(null,"phrase", "Suppression", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 
@@ -1159,4 +1159,16 @@ public static JButton getHistoG(){
     return histogrammeButton ;
 }
 
+//getters anle instance anle fenetre modals
+public static secWin_newPers getWinPers(){
+    return fenetreModale1;
+}
+public static secWin_newPay getWinPay(){
+    return fenetreModale2;
+}
+public static secWin_newTar getWinTarif(){
+    return fenetreModale3;
+}
+
+//ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }

@@ -15,11 +15,11 @@ import javax.swing.event.ListSelectionListener;
 
 
 public class secWin_newPers extends JDialog {
-    private static JTextField[] textFields;
+    private static JTextField[] textFields = new JTextField[9];
     private static String[] values;
-    private static JButton ajouterButton;
-    private static JSpinner DateSpinner_Pers;
-    private static JSpinner.DateEditor DateEditor_Pers;
+    private static JButton ajouterButton = new JButton("Ajouter");
+    private static JSpinner DateSpinner_Pers = new JSpinner(new SpinnerDateModel());
+    private static JSpinner.DateEditor DateEditor_Pers = new JSpinner.DateEditor(DateSpinner_Pers, "dd-MM-yyyy");
     public secWin_newPers(Frame parent) {
         super(parent, "Ajouter un nouvelle personne", true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -32,9 +32,8 @@ public class secWin_newPers extends JDialog {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
-        String[] nomchamp = View.getColumnNames_Pers();
+        String[] nomchamp = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
         int ok = 0;
-        textFields = new JTextField[9];
         for (int i = 0; i < 9 ; i++) {
             int j = i;
             if(ok!=0)j++;
@@ -46,8 +45,6 @@ public class secWin_newPers extends JDialog {
             contentPanel.add(label, constraints);
 
             if(i==3 && ok==0){
-                DateSpinner_Pers = new JSpinner(new SpinnerDateModel());
-                DateEditor_Pers = new JSpinner.DateEditor(DateSpinner_Pers, "dd-MM-yyyy");
                 DateSpinner_Pers.setEditor(DateEditor_Pers);
                 constraints.gridx = 1;
                 contentPanel.add(DateSpinner_Pers, constraints);
@@ -61,9 +58,8 @@ public class secWin_newPers extends JDialog {
 
         JPanel buttonPanel = new JPanel();
         //if(View.rowNow != null) textFields[i].setText(View.rowNow[i]);
-        String aj = "Ajouter";
+        String aj = "";
         if(View.rowNow != null){aj = "Modifier"; View.rowNow = null;}
-        ajouterButton = new JButton(aj);
         ajouterButton.setBackground(new Color(176, 224, 230));
         ajouterButton.setForeground(Color.WHITE);
         ajouterButton.setFont(ajouterButton.getFont().deriveFont(15f));
@@ -93,8 +89,8 @@ public class secWin_newPers extends JDialog {
 }
 
 //maka ny tableau de type zone de texte  (ilaina @fangalana ny entrée an'ny nouvel utilisateur) : im , nom , prenom , diplome , contact , status , situation , Nom conjoint , prenom conjoint //tsy ao lay date de naissance
-   public static JTextField[] getTextFields() {
-    return textFields;
+   public static JTextField getTextFields(int i) {
+    return textFields[i];
 }
 //maka anle objet fanaovana saisis de date an'ny fanaovana saisis de date de naissance
     public static JSpinner getBirthDate(){
