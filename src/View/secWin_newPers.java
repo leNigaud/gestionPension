@@ -89,8 +89,8 @@ public class secWin_newPers extends JDialog {
 }
 
 //maka ny tableau de type zone de texte  (ilaina @fangalana ny entrée an'ny nouvel utilisateur) : im , nom , prenom , diplome , contact , status , situation , Nom conjoint , prenom conjoint //tsy ao lay date de naissance
-   public static JTextField getTextFields(int i) {
-    return textFields[i];
+   public static JTextField[] getTextFields() {
+    return textFields;
 }
 //maka anle objet fanaovana saisis de date an'ny fanaovana saisis de date de naissance
     public static JSpinner getBirthDate(){
