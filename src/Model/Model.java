@@ -37,7 +37,7 @@ import java.awt.Color;
 public class Model {
     private final String DB_URL = "jdbc:postgresql://localhost:5432/gestion_pension";
     private final String USER = "postgres";
-    private final String PASSWORD = "root";
+    private final String PASSWORD = "njaranji";
     private Connection connection;
 
     //Constructor for initializing the connection to the DB
