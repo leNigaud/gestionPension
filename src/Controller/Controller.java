@@ -258,7 +258,7 @@ public class Controller {
                     resetTextFields(infoTar);
 
                     //fermer la fenetre
-                    myView.getWinPers().dispose();
+                    myView.getWinTarif().dispose();
                     System.out.println("ajout de tarif reussi");
                 
                 }   else
