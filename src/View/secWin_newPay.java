@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionListener;
 public class secWin_newPay extends JDialog {
     private static JSpinner DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
     private static JSpinner.DateEditor DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
-    private static JTextField[] textFields = new JTextField[10];
+    private static JTextField[] textFields = new JTextField[2];
     private static JButton ajouterButton = new JButton("Ajouter");
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
@@ -81,8 +81,8 @@ public class secWin_newPay extends JDialog {
     }
 
 //tableau de type zone de texte de taille = 2 // lay zone de texte roa
-    public static JTextField getTextFields(int i) {
-    return textFields[i];
+    public static JTextField[] getTextFields() {
+    return textFields;
 }
 
 //maka anlay composant fanaovana saisis de date

@@ -18,8 +18,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
-
+import Data.Payer;
 import Data.Personne;
+import Data.Tarif;
 import Model.*;
 import View.*;
 
@@ -33,6 +34,7 @@ public class Controller {
         
         ajouterPersonne();
         ajouterPaiement();
+        ajouterTarif();
         
     }
 
@@ -56,6 +58,7 @@ public class Controller {
     //authentifications
     public boolean areFieldsNotEmpty(JTextField[] fields) {
         for (JTextField field : fields) {
+            // if (field ==null) return false;
             String text = field.getText();
             if (text.isEmpty()) {
                 return false;
@@ -136,7 +139,7 @@ public class Controller {
 
     //ajouter une personne dans la base de donnees
     
-   private void ajouterPersonne() {
+    private void ajouterPersonne() {
        JButton boutonAjouter = myView.getWinPers().getAjouterButton();
        
        
@@ -150,6 +153,7 @@ public class Controller {
 
                 //recuperation de la date
                 JSpinner date = myView.getWinPers().getBirthDate(); 
+
                 if (areFirstSevenFieldsNotEmpty(infoPers) && isSpinnerValueValid(date)) {
                      LocalDate dateNais = convertirEnLocalDateJava(date);
                     Personne personneAjouter = new Personne(
@@ -186,5 +190,84 @@ public class Controller {
     //ajouter un paiement
     private void ajouterPaiement() {
         JButton boutonAjouter = myView.getWinPay().getAjouterButton();
+
+        boutonAjouter.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+                JTextField[] infoPay = new JTextField[2];
+                     System.out.println("");
+                    infoPay = myView.getWinPay().getTextFields();
+                     System.out.println(areFieldsNotEmpty(infoPay));
+                    // System.out.println(infoPay[1].getText());
+
+                //recuperation de la date
+                JSpinner date = myView.getWinPay().getDateSpinner_Pay(); 
+
+                if(areFieldsNotEmpty(infoPay) && isSpinnerValueValid(date)) {
+                    LocalDate datePay = convertirEnLocalDateJava(date);
+        
+                    Payer payAjouter = new Payer(
+                        infoPay[0].getText(),
+                        infoPay[1].getText(),
+                        datePay
+                    );
+                    myModel.addPayer(payAjouter);
+                    showSuccessMessage("Les informations du paiement ont \u00E9t\u00E9 bien enregistr\u00E9es");
+                    
+                     //reinitialiser les champs
+                    resetTextFields(infoPay);
+                    setCurrentDate(date);
+
+                    //fermer la fenetre
+                    myView.getWinPers().dispose();
+                    System.out.println("ajout de paiement reussi");
+                
+                }   else
+                         showErrorMessage("Vous avez mal rempli au moins un des champs");
+
+               
+            }
+        });
     }
+
+    //ajouter tarif
+
+    private void ajouterTarif() {
+        JButton boutonAjouter = myView.getWinTarif().getAjouterButton();
+
+        boutonAjouter.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+                JTextField[] infoTar = new JTextField[4];
+                infoTar = myView.getWinTarif().getTextFields();
+                int montant = Integer.parseInt(infoTar[3].getText());
+            
+
+                if(areFieldsNotEmpty(infoTar)) {
+
+                    Tarif tarifAjouter = new Tarif(
+                         infoTar[0].getText(),
+                         infoTar[1].getText(),
+                         infoTar[2].getText(),
+                         montant
+                    );
+                    myModel.addTarif(tarifAjouter);
+                    showSuccessMessage("Les informations du tarif ont \u00E9t\u00E9 bien enregistr\u00E9es");
+                    
+                     //reinitialiser les champs
+                    resetTextFields(infoTar);
+
+                    //fermer la fenetre
+                    myView.getWinPers().dispose();
+                    System.out.println("ajout de tarif reussi");
+                
+                }   else
+                         showErrorMessage("Vous avez mal rempli au moins un des champs");
+
+               
+            }
+        });
+    }
+
+
 }

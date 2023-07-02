@@ -79,8 +79,8 @@ class secWin_newPay extends JDialog {
     }
 
 //tableau de type zone de texte de taille = 2 // lay zone de texte roa
-    public static JTextField getTextFields(int i) {
-    return textFields[i];
+    public static JTextField[] getTextFields() {
+    return textFields;
 }
 
 //maka anlay composant fanaovana saisis de date
