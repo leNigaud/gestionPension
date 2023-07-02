@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 
-class secWin_newPay extends JDialog {
+public class secWin_newPay extends JDialog {
     private static JSpinner DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
     private static JSpinner.DateEditor DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
     private static JTextField[] textFields = new JTextField[10];
