@@ -22,7 +22,7 @@ public class View {
 
     //declaration anle frame
     public static JFrame frame;
-    public static String[] rowNow;
+    public static String[] rowNow = new String[10];
     
     private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
     private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
@@ -70,6 +70,7 @@ public class View {
     private static JPanel labelPanel_Pay;
     private static String[] columnNames_Pay;
     private static Object[][] data_Pay;
+    private static DefaultTableModel modelPay = new DefaultTableModel();
     private static JTable table_Pay;
     private static JTableHeader header_Pay;
     private static JPanel tablePanel_Pay;
@@ -94,6 +95,7 @@ public class View {
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
+    private static DefaultTableModel modelPers = new DefaultTableModel();
     private static JTable table_Pers;
     private static JTableHeader header_Pers;
 
@@ -104,6 +106,7 @@ public class View {
     private static JButton supprimerButton_Tarif = new JButton("Supprimer");
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
+    private static DefaultTableModel modelTarif = new DefaultTableModel();
     private static JTable table_Tarif;
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
@@ -114,7 +117,7 @@ public class View {
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
-    private static JButton histogrammeButton  = new JButton("Histogramme") ;
+    private static JButton histogrammeButton = new JButton("Histogramme") ;
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -137,6 +140,7 @@ public class View {
 
 
     public View() {
+        this.initializeTables();
         SwingUtilities.invokeLater(() -> {
             // Création de la fenêtre
             frame = new JFrame("Pension Manager");
@@ -535,14 +539,14 @@ public class View {
 
     contentPanel_Pay.add(labelPanel_Pay);
     contentPanel_Pay.add(topPanel_Pay);
-
+/*
     columnNames_Pay = new String[]{"IM", "Nom", "Numero de Tarif", "Montant", "Date de Paiement"};
     data_Pay = new Object[][]{
         //{"1", "1", "1", "1","1"},
         //{"54", "2", "28", "265","266"}
     };
     table_Pay = new JTable(data_Pay, columnNames_Pay);
-
+*/
     header_Pay = table_Pay.getTableHeader();
     header_Pay.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
     header_Pay.setBackground(new Color(176, 224, 230));
@@ -694,6 +698,7 @@ private static JPanel createContentPanel3() {
 
     // Ajout du panel de la table
     tablePanel_Pers = new JPanel(new BorderLayout());
+    /*
     columnNames_Pers = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
     data_Pers = new Object[][]{
         //{"im","nom","pnom","22/12/1995","dipom","contact","stats","situ","conj","Pconj"},
@@ -701,7 +706,7 @@ private static JPanel createContentPanel3() {
         //{"","","","","","","","","",""},
         //{"","","","","","","","","",""} 
     };
-    table_Pers = new JTable(data_Pers, columnNames_Pers);
+    table_Pers = new JTable(data_Pers, columnNames_Pers);*/
 
     header_Pers = table_Pers.getTableHeader();
     header_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -769,6 +774,7 @@ private static JPanel createContentPanel4() {
                 
             }
         });
+        
     modifierButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     modifierButton_Tarif.setForeground(Color.WHITE);
     modifierButton_Tarif.setBackground(new Color(176, 224, 230));
@@ -778,11 +784,11 @@ private static JPanel createContentPanel4() {
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
 
-    columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
+    /*columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
     data_Tarif = new Object[][]{
-         //{"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
-          //{"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
-          //{"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
+          {"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
+          {"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
+          {"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
     };
     table_Tarif = new JTable(data_Tarif, columnNames_Tarif);
     table_Tarif.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -796,7 +802,7 @@ private static JPanel createContentPanel4() {
             }
         }
     }
-});
+});*/
 
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -830,6 +836,70 @@ private static JPanel createContentPanel4() {
 
     return panel_Tarif;
 }
+
+//initialisation des tableaux
+public static void initializeTables() {
+        // Initialiser le tableau table_Pers
+        
+        modelPers.addColumn("IM");
+        modelPers.addColumn("NOM");
+        modelPers.addColumn("PRENOMS");
+        modelPers.addColumn("Date de naissance");
+        modelPers.addColumn("Diplôme");
+        modelPers.addColumn("Contact");
+        modelPers.addColumn("Statut");
+        modelPers.addColumn("Situation");
+        modelPers.addColumn("Nom de Conjoint(e)");
+        modelPers.addColumn("Prenom de conjoint(e)");
+        table_Pers = new JTable(modelPers);
+
+        // Initialiser le tableau table_Pay
+        
+        modelPay.addColumn("IM");
+        modelPay.addColumn("Nom");
+        modelPay.addColumn("Numero de Tarif");
+        modelPay.addColumn("Montant");
+        modelPay.addColumn("Date de Paiement");
+        table_Pay = new JTable(modelPay);
+
+        // Initialiser le tableau table_Tarif
+        
+        modelTarif.addColumn("Numuro de Tarif");
+        modelTarif.addColumn("Diplôme");
+        modelTarif.addColumn("Catégorie");
+        modelTarif.addColumn("Montant");
+        table_Tarif = new JTable(modelTarif);
+    }
+//contenu des tables
+public static void setTableDataPers(Object[][] data) {
+     // Supprimer toutes les lignes existantes du modèle de tableau
+        modelPers.setRowCount(0);
+
+        // Ajouter les nouvelles lignes au modèle de tableau
+        for (Object[] rowData : data) {
+            modelPers.addRow(rowData);
+        }
+    }
+
+
+    public static void setTableDataPay(Object[][] data) {
+        modelPay.setRowCount(0); // Supprimer toutes les lignes existantes
+
+        for (Object[] rowData : data) {
+            modelPay.addRow(rowData);
+        }
+    }
+
+    public void setTableDataTarif(Object[][] data) {
+        // Supprimer toutes les lignes existantes du modèle de tableau
+        modelTarif.setRowCount(0);
+
+        // Ajouter les nouvelles lignes au modèle de tableau
+        for (Object[] rowData : data) {
+            modelTarif.addRow(rowData);
+        }
+    }
+
 
 
 //methode manao update anle table hita maso eo .. afaka modifier-na raha tsy mety
@@ -1089,8 +1159,8 @@ public static JButton getDelBut_Pay() {
     return delBut_Pay;
 }
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
-public static boolean afficherQuestionOuiNon() {
-    int choix = JOptionPane.showOptionDialog(null,"phrase", "Suppression", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+public static boolean afficherQuestionOuiNon(String phrase) {
+    int choix = JOptionPane.showOptionDialog(null,phrase, "Titre", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 
@@ -1155,8 +1225,8 @@ public static JTable getTable_Tarif() {
 
 
 //#bouton histogramme
-public static JButton getHistoG(){
-    return histogrammeButton ;
+public static JButton gethistogrammeButton() {
+    return histogrammeButton;
 }
 
 //getters anle instance anle fenetre modals

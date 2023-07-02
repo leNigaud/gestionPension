@@ -7,7 +7,7 @@ import View.*;
 
 public class Main {
 
-public static void main(String[] args) {
+    public static void main(String[] args) {
 
         View myView = new View();
         Model myModel = new Model();

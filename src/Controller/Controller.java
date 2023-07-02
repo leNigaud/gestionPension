@@ -10,6 +10,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -107,6 +109,11 @@ public class Controller {
             return true;
     }
 
+    public boolean containsOnlyNumbers(JTextField field) {
+        String text = field.getText();
+        return text.matches("\\d+");
+    }
+
     //feedback
     public void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(null, message, "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
@@ -155,31 +162,33 @@ public class Controller {
                 JSpinner date = myView.getWinPers().getBirthDate(); 
 
                 if (areFirstSevenFieldsNotEmpty(infoPers) && isSpinnerValueValid(date)) {
-                     LocalDate dateNais = convertirEnLocalDateJava(date);
-                    Personne personneAjouter = new Personne(
-                        infoPers[0].getText(),
-                        infoPers[1].getText(),
-                        infoPers[2].getText(),
-                        dateNais,
-                        infoPers[3].getText(),
-                        infoPers[4].getText(),
-                        infoPers[5].getText(),
-                        infoPers[6].getText(),
-                        infoPers[7].getText(),
-                        infoPers[8].getText()
-                    );
-            
-                    myModel.addPersonne(personneAjouter);
-                    showSuccessMessage("Les informations de la personne ont été bien enregistrées");
-                    
-                    //reinitialiser les champs
-                    resetTextFields(infoPers);
-                    setCurrentDate(date);
-
-                    //fermer la fenetre
-                    myView.getWinPers().dispose();
-                    System.out.println("ajout de personne reussi");
+                    if (containsOnlyNumbers(infoPers[0])) {    
+                        LocalDate dateNais = convertirEnLocalDateJava(date);
+                        Personne personneAjouter = new Personne(
+                            infoPers[0].getText(),
+                            infoPers[1].getText(),
+                            infoPers[2].getText(),
+                            dateNais,
+                            infoPers[3].getText(),
+                            infoPers[4].getText(),
+                            infoPers[5].getText(),
+                            infoPers[6].getText(),
+                            infoPers[7].getText(),
+                            infoPers[8].getText()
+                        );
                 
+                        myModel.addPersonne(personneAjouter);
+                        showSuccessMessage("Les informations de la personne ont été bien enregistrées");
+                        
+                        //reinitialiser les champs
+                        resetTextFields(infoPers);
+                        setCurrentDate(date);
+
+                        //fermer la fenetre
+                        myView.getWinPers().dispose();
+                        System.out.println("ajout de personne reussi");
+                    } else
+                        showErrorMessage("L'IM doit contenir un nombre");
                 } else 
                     showErrorMessage("Vous avez mal rempli au moins un des champs");
             
@@ -204,23 +213,26 @@ public class Controller {
                 JSpinner date = myView.getWinPay().getDateSpinner_Pay(); 
 
                 if(areFieldsNotEmpty(infoPay) && isSpinnerValueValid(date)) {
-                    LocalDate datePay = convertirEnLocalDateJava(date);
-        
-                    Payer payAjouter = new Payer(
-                        infoPay[0].getText(),
-                        infoPay[1].getText(),
-                        datePay
-                    );
-                    myModel.addPayer(payAjouter);
-                    showSuccessMessage("Les informations du paiement ont \u00E9t\u00E9 bien enregistr\u00E9es");
-                    
-                     //reinitialiser les champs
-                    resetTextFields(infoPay);
-                    setCurrentDate(date);
+                    if (containsOnlyNumbers(infoPay[0]) && containsOnlyNumbers(infoPay[1])) {
+                        LocalDate datePay = convertirEnLocalDateJava(date);
+                
+                            Payer payAjouter = new Payer(
+                                infoPay[0].getText(),
+                                infoPay[1].getText(),
+                                datePay
+                            );
+                            myModel.addPayer(payAjouter);
+                            showSuccessMessage("Les informations du paiement ont \u00E9t\u00E9 bien enregistr\u00E9es");
+                            
+                            //reinitialiser les champs
+                            resetTextFields(infoPay);
+                            setCurrentDate(date);
 
-                    //fermer la fenetre
-                    myView.getWinPers().dispose();
-                    System.out.println("ajout de paiement reussi");
+                            //fermer la fenetre
+                            myView.getWinPers().dispose();
+                            System.out.println("ajout de paiement reussi");
+                    } else 
+                        showErrorMessage("Vos devez saisir un nombre sur les champs \"IM\" et \"numero de tarif\"");
                 
                 }   else
                          showErrorMessage("Vous avez mal rempli au moins un des champs");
@@ -240,26 +252,30 @@ public class Controller {
            public void actionPerformed(ActionEvent e) {
                 JTextField[] infoTar = new JTextField[4];
                 infoTar = myView.getWinTarif().getTextFields();
-                int montant = Integer.parseInt(infoTar[3].getText());
-            
-
+                
+                
+                
                 if(areFieldsNotEmpty(infoTar)) {
+                    if (containsOnlyNumbers(infoTar[3])) {
+                        //conversion du montant en entier
+                        int montant = Integer.parseInt(infoTar[3].getText());
+                        Tarif tarifAjouter = new Tarif(
+                             infoTar[0].getText(),
+                             infoTar[1].getText(),
+                             infoTar[2].getText(),
+                             montant
+                        );
+                        myModel.addTarif(tarifAjouter);
+                        showSuccessMessage("Les informations du tarif ont \u00E9t\u00E9 bien enregistr\u00E9es");
 
-                    Tarif tarifAjouter = new Tarif(
-                         infoTar[0].getText(),
-                         infoTar[1].getText(),
-                         infoTar[2].getText(),
-                         montant
-                    );
-                    myModel.addTarif(tarifAjouter);
-                    showSuccessMessage("Les informations du tarif ont \u00E9t\u00E9 bien enregistr\u00E9es");
-                    
-                     //reinitialiser les champs
-                    resetTextFields(infoTar);
+                         //reinitialiser les champs
+                        resetTextFields(infoTar);
 
-                    //fermer la fenetre
-                    myView.getWinTarif().dispose();
-                    System.out.println("ajout de tarif reussi");
+                        //fermer la fenetre
+                        myView.getWinTarif().dispose();
+                        System.out.println("ajout de tarif reussi");
+                    } else
+                        showErrorMessage("Vos devez saisir un nombre sur le champ \"montant\"");
                 
                 }   else
                          showErrorMessage("Vous avez mal rempli au moins un des champs");
@@ -268,6 +284,8 @@ public class Controller {
             }
         });
     }
+
+    //menu personne
 
 
 }
