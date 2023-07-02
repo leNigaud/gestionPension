@@ -12,13 +12,19 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import Data.*;
 import Model.*;
-
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+//date ; zone de texte ; checkbox; tableau
 
 public class View {
 
     //declaration anle frame
     public static JFrame frame;
-    public static String[] rowNow;
+    public static String[] rowNow = new String[10];
+    
+    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
+    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
+    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame);
 
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
@@ -27,9 +33,9 @@ public class View {
     private static JPanel contentPanel3_New;
     private static JPanel contentPanel4_New;
     private static JLabel label_New;
-    private static JButton button1_New;
-    private static JButton button2_New;
-    private static JButton button3_New;
+    private static JButton button1_New = new JButton("Nouvelle Personne");
+    private static JButton button2_New = new JButton("Nouveau Paiement");
+    private static JButton button3_New = new JButton("Nouveau Tarif");
     private static Font labelFont_New;
     private static Color labelColor_New;
     private static Font buttonFont_New;
@@ -42,18 +48,18 @@ public class View {
     //variable miasa ao @methode mampiditra contenu an'ny paiement
     private static JPanel contentPanel_Pay;
     private static JPanel topPanel_Pay;
-    private static JSpinner startDateSpinner_Pay;
-    private static JSpinner endDateSpinner_Pay;
-    private static JSpinner.DateEditor startDateEditor_Pay;
-    private static JSpinner.DateEditor endDateEditor_Pay;
+    private static JSpinner startDateSpinner_Pay = new JSpinner(new SpinnerDateModel());;
+    private static JSpinner endDateSpinner_Pay = new JSpinner(new SpinnerDateModel());;
+    private static JSpinner.DateEditor startDateEditor_Pay = new JSpinner.DateEditor(startDateSpinner_Pay, "dd/MM/yyyy");;
+    private static JSpinner.DateEditor endDateEditor_Pay = new JSpinner.DateEditor(endDateSpinner_Pay, "dd/MM/yyyy");;
     private static Font dateFont_Pay;
     private static Color dateForeground_Pay;
     private static Color dateBackground_Pay;
     private static Border dateBorder_Pay;
-    private static JButton filterPay;
-    private static JButton modifBut_Pay;
-    private static JButton delBut_Pay;
-    private static JButton recu_Pay;
+    private static JButton filterPay = new JButton("Filtrer");
+    private static JButton modifBut_Pay = new JButton("Modifier");
+    private static JButton delBut_Pay = new JButton("Supprimer");
+    private static JButton recu_Pay = new JButton("Genrer un reçu");
     private static JLabel label_Pay;
     private static JLabel label1_Pay;
     private static JLabel label2_Pay;
@@ -62,6 +68,7 @@ public class View {
     private static JPanel labelPanel_Pay;
     private static String[] columnNames_Pay;
     private static Object[][] data_Pay;
+    private static DefaultTableModel modelPay = new DefaultTableModel();
     private static JTable table_Pay;
     private static JTableHeader header_Pay;
     private static JPanel tablePanel_Pay;
@@ -71,45 +78,44 @@ public class View {
     private static GridBagConstraints gbc_Pers;
     private static JLabel label_Pers;
     private static JPanel searchPanel_Pers;
-    private static JTextField searchField_Pers;
-    private static JButton searchButton_Pers;
+    private static JTextField searchField_Pers = new JTextField(20);
+    private static JButton searchButton_Pers = new JButton("Rechercher");
     private static Font buttonFont_Pay_Pers;
     private static Color buttonForeground_Pay_Pers;
     private static Color buttonBackground_Pay_Pers;
     private static JPanel checkboxFilterPanel_Pers;
-    private static JCheckBox checkboxMort_Pers;
-    private static JCheckBox checkboxVivant_Pers;
-    private static JButton filterButton_Pers;
+    private static JCheckBox checkboxMort_Pers = new JCheckBox("Mort");
+    private static JCheckBox checkboxVivant_Pers = new JCheckBox("Vivant");
+    private static JButton filterButton_Pers = new JButton("Filtrer");
     private static JPanel buttonPanel_Pers;
-    private static JButton modifyButton_Pers;
-    private static JButton deleteButton_Pers;
+    private static JButton modifyButton_Pers = new JButton("Modifier");
+    private static JButton deleteButton_Pers = new JButton("Supprimer");
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
+    private static DefaultTableModel modelPers = new DefaultTableModel();
     private static JTable table_Pers;
     private static JTableHeader header_Pers;
 
     //variable miasa amle contenu an'ny bouton tarif
     private static JPanel panel_Tarif;
     private static JLabel label_Tarif;
-    private static JButton modifierButton_Tarif;
-    private static JButton supprimerButton_Tarif;
+    private static JButton modifierButton_Tarif = new JButton("Modifier");
+    private static JButton supprimerButton_Tarif = new JButton("Supprimer");
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
+    private static DefaultTableModel modelTarif = new DefaultTableModel();
     private static JTable table_Tarif;
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
     private static JPanel buttonPanel_Tarif;
-    private static secWin_newPers fenetreModale1;
-    private static secWin_newPay fenetreModale2;
-    private static secWin_newTar fenetreModale3; 
 
 
     private static JButton[] bouttons; // Déclaration du tableau bouttons en tant que variable de classe
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
-    private static JButton histogrammeButton ;
+    private static JButton histogrammeButton = new JButton("Histogramme") ;
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -132,6 +138,7 @@ public class View {
 
 
     public View() {
+        this.initializeTables();
         SwingUtilities.invokeLater(() -> {
             // Création de la fenêtre
             frame = new JFrame("Pension Manager");
@@ -356,25 +363,24 @@ public class View {
     contentPanel2_New.add(label_New);
     contentPanel1_New.add(contentPanel2_New);
 
-    button1_New = new JButton("Nouvelle Personne");
+    
     button1_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fenetreModale1 = new secWin_newPers(frame);
+                
                 fenetreModale1.setVisible(true);
             }
         });
-    button2_New = new JButton("Nouveau Paiement");
+    
     button2_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fenetreModale2 = new secWin_newPay(frame);
+                
                 fenetreModale2.setVisible(true);
             }
         });
-    button3_New = new JButton("Nouveau Tarif");
     //secWin_newTar
     button3_New.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fenetreModale3 = new secWin_newTar(frame);
+                
                 fenetreModale3.setVisible(true);
             }
         });
@@ -442,10 +448,7 @@ public class View {
                 }};
     topPanel_Pay.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-    startDateSpinner_Pay = new JSpinner(new SpinnerDateModel());
-    endDateSpinner_Pay = new JSpinner(new SpinnerDateModel());
-    startDateEditor_Pay = new JSpinner.DateEditor(startDateSpinner_Pay, "dd/MM/yyyy");
-    endDateEditor_Pay = new JSpinner.DateEditor(endDateSpinner_Pay, "dd/MM/yyyy");
+   
     startDateSpinner_Pay.setEditor(startDateEditor_Pay);
     endDateSpinner_Pay.setEditor(endDateEditor_Pay);
 
@@ -462,8 +465,6 @@ public class View {
     endDateSpinner_Pay.setBackground(dateBackground_Pay);
     endDateSpinner_Pay.setBorder(dateBorder_Pay);
 
-    filterPay = new JButton("Filtrer");
-    modifBut_Pay = new JButton("Modifier");
     modifBut_Pay.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -486,9 +487,7 @@ public class View {
         }
             }
         });
-    delBut_Pay = new JButton("Supprimer");
     
-    recu_Pay = new JButton("Générer un reçu");
 
     Font buttonFont_Pay = new Font("Bookman Old Style", Font.PLAIN, 20);
     Color buttonForeground_Pay = Color.WHITE;
@@ -538,14 +537,14 @@ public class View {
 
     contentPanel_Pay.add(labelPanel_Pay);
     contentPanel_Pay.add(topPanel_Pay);
-
+/*
     columnNames_Pay = new String[]{"IM", "Nom", "Numero de Tarif", "Montant", "Date de Paiement"};
     data_Pay = new Object[][]{
         //{"1", "1", "1", "1","1"},
         //{"54", "2", "28", "265","266"}
     };
     table_Pay = new JTable(data_Pay, columnNames_Pay);
-
+*/
     header_Pay = table_Pay.getTableHeader();
     header_Pay.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
     header_Pay.setBackground(new Color(176, 224, 230));
@@ -606,13 +605,11 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    searchField_Pers = new JTextField(20);
     searchField_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     searchField_Pers.setForeground(Color.BLACK);
     searchField_Pers.setBackground(Color.WHITE);
     searchField_Pers.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     searchField_Pers.setPreferredSize(new Dimension(200, 30));
-    searchButton_Pers = new JButton("Rechercher");
     buttonFont_Pay_Pers = new Font("Bookman Old Style", Font.PLAIN, 20);
     buttonForeground_Pay_Pers = Color.WHITE;
     buttonBackground_Pay_Pers = new Color(176, 224, 230);
@@ -633,8 +630,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    checkboxMort_Pers = new JCheckBox("Mort");
-    checkboxVivant_Pers = new JCheckBox("Vivant");
     checkboxMort_Pers.setForeground(buttonBackground_Pay_Pers);
     checkboxVivant_Pers.setForeground(buttonBackground_Pay_Pers);
     checkboxMort_Pers.setFont(buttonFont_Pay_Pers);
@@ -648,7 +643,6 @@ private static JPanel createContentPanel3() {
     checkboxFilterPanel_Pers.add(checkboxMort_Pers);
     checkboxFilterPanel_Pers.add(checkboxVivant_Pers);
     checkboxFilterPanel_Pers.add(Box.createHorizontalStrut(10)); // Espacement entre les checkboxes et le bouton "Filtrer"
-    filterButton_Pers = new JButton("Filtrer");
     filterButton_Pers.setFont(buttonFont_Pay_Pers);
     filterButton_Pers.setForeground(buttonForeground_Pay_Pers);
     filterButton_Pers.setBackground(buttonBackground_Pay_Pers);
@@ -664,7 +658,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    modifyButton_Pers = new JButton("Modifier");
     modifyButton_Pers.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -688,7 +681,6 @@ private static JPanel createContentPanel3() {
                 
             }
         });
-    deleteButton_Pers = new JButton("Supprimer");
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
@@ -704,6 +696,7 @@ private static JPanel createContentPanel3() {
 
     // Ajout du panel de la table
     tablePanel_Pers = new JPanel(new BorderLayout());
+    /*
     columnNames_Pers = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
     data_Pers = new Object[][]{
         //{"im","nom","pnom","22/12/1995","dipom","contact","stats","situ","conj","Pconj"},
@@ -711,7 +704,7 @@ private static JPanel createContentPanel3() {
         //{"","","","","","","","","",""},
         //{"","","","","","","","","",""} 
     };
-    table_Pers = new JTable(data_Pers, columnNames_Pers);
+    table_Pers = new JTable(data_Pers, columnNames_Pers);*/
 
     header_Pers = table_Pers.getTableHeader();
     header_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -756,7 +749,6 @@ private static JPanel createContentPanel4() {
     label_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 30));
     label_Tarif.setForeground(new Color(176, 224, 230));
 
-    modifierButton_Tarif = new JButton("Modifier");
     modifierButton_Tarif.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         // Vérifier si une ligne est sélectionnée
@@ -780,21 +772,21 @@ private static JPanel createContentPanel4() {
                 
             }
         });
+        
     modifierButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     modifierButton_Tarif.setForeground(Color.WHITE);
     modifierButton_Tarif.setBackground(new Color(176, 224, 230));
 
-    supprimerButton_Tarif = new JButton("Supprimer");
     
     supprimerButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
 
-    columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
+    /*columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
     data_Tarif = new Object[][]{
-         //{"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
-          //{"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
-          //{"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
+          {"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
+          {"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
+          {"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
     };
     table_Tarif = new JTable(data_Tarif, columnNames_Tarif);
     table_Tarif.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -808,7 +800,7 @@ private static JPanel createContentPanel4() {
             }
         }
     }
-});
+});*/
 
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -842,6 +834,70 @@ private static JPanel createContentPanel4() {
 
     return panel_Tarif;
 }
+
+//initialisation des tableaux
+public static void initializeTables() {
+        // Initialiser le tableau table_Pers
+        
+        modelPers.addColumn("IM");
+        modelPers.addColumn("NOM");
+        modelPers.addColumn("PRENOMS");
+        modelPers.addColumn("Date de naissance");
+        modelPers.addColumn("Diplôme");
+        modelPers.addColumn("Contact");
+        modelPers.addColumn("Statut");
+        modelPers.addColumn("Situation");
+        modelPers.addColumn("Nom de Conjoint(e)");
+        modelPers.addColumn("Prenom de conjoint(e)");
+        table_Pers = new JTable(modelPers);
+
+        // Initialiser le tableau table_Pay
+        
+        modelPay.addColumn("IM");
+        modelPay.addColumn("Nom");
+        modelPay.addColumn("Numero de Tarif");
+        modelPay.addColumn("Montant");
+        modelPay.addColumn("Date de Paiement");
+        table_Pay = new JTable(modelPay);
+
+        // Initialiser le tableau table_Tarif
+        
+        modelTarif.addColumn("Numuro de Tarif");
+        modelTarif.addColumn("Diplôme");
+        modelTarif.addColumn("Catégorie");
+        modelTarif.addColumn("Montant");
+        table_Tarif = new JTable(modelTarif);
+    }
+//contenu des tables
+public static void setTableDataPers(Object[][] data) {
+     // Supprimer toutes les lignes existantes du modèle de tableau
+        modelPers.setRowCount(0);
+
+        // Ajouter les nouvelles lignes au modèle de tableau
+        for (Object[] rowData : data) {
+            modelPers.addRow(rowData);
+        }
+    }
+
+
+    public static void setTableDataPay(Object[][] data) {
+        modelPay.setRowCount(0); // Supprimer toutes les lignes existantes
+
+        for (Object[] rowData : data) {
+            modelPay.addRow(rowData);
+        }
+    }
+
+    public void setTableDataTarif(Object[][] data) {
+        // Supprimer toutes les lignes existantes du modèle de tableau
+        modelTarif.setRowCount(0);
+
+        // Ajouter les nouvelles lignes au modèle de tableau
+        for (Object[] rowData : data) {
+            modelTarif.addRow(rowData);
+        }
+    }
+
 
 
 //getters
@@ -1092,8 +1148,8 @@ public static JButton getDelBut_Pay() {
     return delBut_Pay;
 }
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
-public static boolean afficherQuestionOuiNon() {
-    int choix = JOptionPane.showOptionDialog(null, "Vouleé-vous vraiment supprimer cette ligne ?", "Suppression", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+public static boolean afficherQuestionOuiNon(String phrase) {
+    int choix = JOptionPane.showOptionDialog(null,phrase, "Titre", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 
@@ -1158,8 +1214,8 @@ public static JTable getTable_Tarif() {
 
 
 //#bouton histogramme
-public static JButton getHistoG(){
-    return histogrammeButton ;
+public static JButton gethistogrammeButton() {
+    return histogrammeButton;
 }
 
 //getters anle instance anle fenetre modals

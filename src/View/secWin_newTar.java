@@ -13,10 +13,10 @@ import javax.swing.event.ListSelectionListener;
 
 
 public class secWin_newTar extends JDialog {
-    private static JTextField[] textFields;
+    private static JTextField[] textFields = new JTextField[10];
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
-    private static JButton ajouterButton;
+    private static JButton ajouterButton = new JButton("Ajouter");
     public secWin_newTar(Frame parent) {
         super(parent, "Ajouter un nouveau tarif", true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -30,7 +30,6 @@ public class secWin_newTar extends JDialog {
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(5, 5, 5, 5);
         String[] nomchamp = {"numero de tarif",  "diplome", "catégorie", "montant"};
-        textFields = new JTextField[10];
         for (int i = 0; i < 4; i++) {
             JLabel label = new JLabel(nomchamp[i]); 
             label.setFont(new Font("Bookman Old Style", Font.PLAIN, 15));
@@ -46,9 +45,6 @@ public class secWin_newTar extends JDialog {
         }
 
         JPanel buttonPanel = new JPanel();
-        String aj = "Ajouter";
-        if(View.rowNow != null){aj = "Modifier"; View.rowNow = null;}
-        ajouterButton = new JButton(aj);
         ajouterButton.setBackground(new Color(176, 224, 230));
         ajouterButton.setForeground(Color.WHITE);
         ajouterButton.setFont(ajouterButton.getFont().deriveFont(15f));
@@ -74,8 +70,8 @@ public class secWin_newTar extends JDialog {
     
 
 //zone de texte efatra no retourner-n'ty getter ray ty : num tarif , diplome , catégorie , montant
-    public static JTextField[] getTextFields() {
-    return textFields;
+    public static JTextField getTextFields(int i) {
+    return textFields[i];
 }
 //retourne le bouton ajouter
     public static JButton getAjouterButton() {
