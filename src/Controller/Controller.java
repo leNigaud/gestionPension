@@ -45,7 +45,8 @@ public class Controller {
         showTablePers();
         showTableTar();
 
-        filtrerTable();
+        filtrerTablePay();
+        filtrerTablePers();
         
     }
     
@@ -321,6 +322,25 @@ public class Controller {
         myView.setTableDataPers(matrix);
     }
 
+    private void filtrerTablePers() {
+        JButton filtrer = myView.getFilterButton_Pers();
+            filtrer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (myView.getCheckboxMort_Pers().isSelected() && myView.getCheckboxVivant_Pers().isSelected())
+                    showTablePers();
+                else {     
+                    if (myView.getCheckboxMort_Pers().isSelected())
+                        myView.setTableDataPers(myModel.getAllPersByStatut("décédé"));
+                    else if (myView.getCheckboxVivant_Pers().isSelected())
+                        myView.setTableDataPers(myModel.getAllPersByStatut("vivant"));
+                    else
+                        myView.setTableDataPers(null);
+               }
+            }
+        });
+    }
+
     //menu paiement
     private void showTablePay() {
      
@@ -328,7 +348,7 @@ public class Controller {
 
     }
 
-    private void filtrerTable() {
+    private void filtrerTablePay() {
         JButton filtrer = myView.getfilterPay();
             filtrer.addActionListener(new ActionListener() {
             @Override
@@ -340,11 +360,7 @@ public class Controller {
         });
     }
 
-    
-
-    
-
-    //menu paiement
+    //menu tarif
     private void showTableTar() {
         List<Tarif> tarifs = myModel.getAllTarifs();
         Object[][] matrix = new Object[tarifs.size()][];

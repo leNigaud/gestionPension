@@ -141,6 +141,56 @@ public class Model {
         return allPersons;
     }
 
+    public Object[][] getAllPersByStatut(String state) {
+            Object[][] rowDataArray = null;
+    
+        try {
+            String query = "SELECT * FROM personne WHERE statut = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, state);
+            
+            ResultSet rs = ps.executeQuery();
+
+            List<Object[]> rowDataList = new ArrayList<>();
+
+            while (rs.next()) {
+                String IM = rs.getString("IM"); //take all the columns for a row in the rs
+                String nom = rs.getString("nom");
+                String prénoms = rs.getString("prénoms");
+                LocalDate datenais = rs.getDate("datenais").toLocalDate(); //need a LocalDate type
+                String diplome = rs.getString("diplome");
+                String contact = rs.getString("contact");
+                String statut = rs.getString("statut");
+                String situation = rs.getString("situation");
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+
+                Object[] rowData = {
+                        IM,
+                        nom,
+                        prénoms,
+                        datenais, 
+                        diplome,
+                        contact,
+                        statut,
+                        situation,
+                        nomConjoint,
+                        prenomConjoint
+                };
+
+                rowDataList.add(rowData);
+            }
+
+            rowDataArray = new Object[rowDataList.size()][];
+            rowDataList.toArray(rowDataArray);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return rowDataArray;
+    }
+
     //Display/Read all Tarifs 
     public List<Tarif> getAllTarifs() {
         List<Tarif> allTarifs = new ArrayList<>();
@@ -184,6 +234,7 @@ public class Model {
         }
         return allPayers;
     }
+    
 
     public Object[][] getObjectPay() {
  
@@ -447,6 +498,7 @@ public class Model {
         }
         return personne;
     }
+    
 
     //Get a Tarif from DB by its num_tarif 
     public Tarif getTarif(String numTarif) {

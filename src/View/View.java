@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import Data.*;
 import Model.*;
-import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 //date ; zone de texte ; checkbox; tableau
 
@@ -876,8 +876,10 @@ public static void setTableDataPers(Object[][] data) {
         modelPers.setRowCount(0);
 
         // Ajouter les nouvelles lignes au modèle de tableau
-        for (Object[] rowData : data) {
-            modelPers.addRow(rowData);
+        if (data!=null) {
+            for (Object[] rowData : data) {
+                modelPers.addRow(rowData);
+            }
         }
     }
 
@@ -1242,3 +1244,4 @@ public static secWin_newTar getWinTarif(){
 
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
+
