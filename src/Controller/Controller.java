@@ -47,9 +47,12 @@ public class Controller {
 
         filtrerTablePay();
         filtrerTablePers();
+
+        rechercherPers();
         
     }
     
+    //conversion
     private LocalDate convertirEnLocalDateJava(JSpinner jSpinner) {
         // Obtenir la valeur sélectionnée dans le JSpinner
         Object valeurSelectionnee = jSpinner.getValue();
@@ -65,6 +68,30 @@ public class Controller {
             throw new IllegalArgumentException("Le JSpinner ne contient pas une valeur de type Date.");
         }
     }
+    public Object[][] convertListPerstoObj(List<Personne> personnes) {
+    Object[][] result = new Object[personnes.size()][];
+    
+    for (int i = 0; i < personnes.size(); i++) {
+        Personne personne = personnes.get(i);
+        
+        Object[] rowData = {
+            personne.getIM(),
+            personne.getNom(),
+            personne.getPrénoms(),
+            personne.getDatenais(),
+            personne.getDiplome(),
+            personne.getContact(),
+            personne.getStatut(),
+            personne.getSituation(),
+            personne.getNomConjoint(),
+            personne.getPrenomConjoint()
+        };
+        
+        result[i] = rowData;
+    }
+    
+    return result;
+}
 
     
     //authentifications
@@ -133,6 +160,19 @@ public class Controller {
         JOptionPane.showMessageDialog(null, message, "Enregistrement réussie", JOptionPane.INFORMATION_MESSAGE);
     }    
     
+    public boolean contientChiffre(String str) {
+    if (str == null || str.isEmpty()) {
+        return false;
+    }
+
+    for (char c : str.toCharArray()) {
+        if (Character.isDigit(c)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
     //reinitialisation des valeurs
     private void resetTextFields(JTextField[] fields) {
@@ -301,24 +341,7 @@ public class Controller {
     //menu personne
     private void showTablePers() {
         List<Personne> personnes = myModel.getAllPersons();
-        Object[][] matrix = new Object[personnes.size()][];
-        
-        for (int i = 0; i < personnes.size(); i++) {
-            Personne personne = personnes.get(i);
-            Object[] rowData = {
-                personne.getIM(),
-                personne.getNom(),
-                personne.getPrénoms(),
-                personne.getDatenais(),
-                personne.getDiplome(),
-                personne.getContact(),
-                personne.getStatut(),
-                personne.getSituation(),
-                personne.getNomConjoint(),
-                personne.getPrenomConjoint()
-            };
-            matrix[i] = rowData;
-        }
+        Object[][] matrix = convertListPerstoObj(personnes);
         myView.setTableDataPers(matrix);
     }
 
@@ -337,6 +360,32 @@ public class Controller {
                     else
                         myView.setTableDataPers(null);
                }
+            }
+        });
+    }
+
+    private void rechercherPers() {
+        JButton rechercher = myView.getSearchButton_Pers();
+            rechercher.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String motRechercher= myView.getSearchField_Pers().getText();
+                if (myView.getSearchField_Pers().getText().isEmpty())
+                    showTablePers();
+                else {
+                    if (contientChiffre(motRechercher)) {
+                        Object[][] donnee=convertListPerstoObj(myModel.getPersonneTel(motRechercher));
+                        myView.setTableDataPers(donnee);
+                    }
+                    else {
+                        Object[][] donnee=convertListPerstoObj(myModel.getPersonneName(motRechercher));
+                        myView.setTableDataPers(donnee);
+
+                    }
+                        
+                }
+                //  System.out.println(motRechercher);
+
             }
         });
     }

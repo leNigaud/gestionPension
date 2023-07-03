@@ -671,6 +671,36 @@ public class Model {
         }
         return allPersons;
     }
+    //personne par tel
+    public List<Personne> getPersonneTel(String num) {
+        List<Personne> allPersons = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM personne WHERE contact ILIKE '%" + num + "%'";
+
+            Statement statement = connection.createStatement();
+            
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                String im = rs.getString("IM"); 
+                String nom = rs.getString("nom");
+                String prénoms = rs.getString("prénoms");
+                LocalDate datenais = rs.getDate("datenais").toLocalDate(); 
+                String diplome = rs.getString("diplome");
+                String contact = rs.getString("contact");
+                String statut = rs.getString("statut");
+                String situation = rs.getString("situation");
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+            
+                Personne personne = new Personne(im, nom, prénoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint); 
+                allPersons.add(personne);                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allPersons;
+    }
 
     //List of Personnes by statut, The total effectif is just getAllPersonneByStatut().size() 
     public List<Personne> listAllPersonneByStatut() {
