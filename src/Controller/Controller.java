@@ -49,6 +49,10 @@ public class Controller {
         filtrerTablePers();
 
         rechercherPers();
+
+        modifierPers();
+        modifierPay();
+        modifierTarif();
         
     }
     
@@ -390,6 +394,17 @@ public class Controller {
         });
     }
 
+     private void modifierPers() {
+        JButton filtrer = myView.getfilterPay();
+            filtrer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
+    }
+
+
     //menu paiement
     private void showTablePay() {
      
@@ -409,6 +424,17 @@ public class Controller {
         });
     }
 
+     private void modifierPay() {
+        JButton filtrer = myView.getfilterPay();
+            filtrer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
+    }
+
+
     //menu tarif
     private void showTableTar() {
         List<Tarif> tarifs = myModel.getAllTarifs();
@@ -426,6 +452,16 @@ public class Controller {
         }
         myView.setTableDataTarif(matrix);
 
+    }
+
+    private void modifierTarif() {
+        JButton filtrer = myView.getfilterPay();
+            filtrer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
     }
 
 
