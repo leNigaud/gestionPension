@@ -10,12 +10,18 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import Data.*;
+import Model.*;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.util.Calendar;
+import java.util.Date;
 
 
 class secWin_newPay extends JDialog {
     private static JSpinner DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
     private static JSpinner.DateEditor DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
-    private static JTextField[] textFields = new JTextField[10];
+    private static JTextField[] textFields = new JTextField[2];
     private static JButton ajouterButton = new JButton("Ajouter");
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
@@ -65,6 +71,13 @@ class secWin_newPay extends JDialog {
         annulerButton.setFont(annulerButton.getFont().deriveFont(15f));
         annulerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new java.util.Date());
+                Date currentDate = calendar.getTime();
+                DateSpinner_Pay.setValue(currentDate);
                 dispose();
             }
         });
@@ -92,5 +105,15 @@ class secWin_newPay extends JDialog {
     public static JButton getAjouterButton() {
     return ajouterButton;
 }
+
+//set content
+    public static void setcontent(Object[] entre){
+        String one = (String) entre[0];
+        String two = (String) entre[1];
+        Date now = (Date) entre[2];
+        textFields[0].setText(one);
+        textFields[1].setText(two);
+        DateSpinner_Pay.setValue(now);
+    }
 
 }

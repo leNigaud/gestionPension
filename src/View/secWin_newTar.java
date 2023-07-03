@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 
 
 public class secWin_newTar extends JDialog {
-    private static JTextField[] textFields = new JTextField[10];
+    private static JTextField[] textFields = new JTextField[4];
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
     private static JButton ajouterButton = new JButton("Ajouter");
@@ -55,6 +55,9 @@ public class secWin_newTar extends JDialog {
         annulerButton.setFont(annulerButton.getFont().deriveFont(15f));
         annulerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
                 dispose();
             }
         });

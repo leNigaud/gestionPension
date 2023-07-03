@@ -116,6 +116,7 @@ public class View {
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
     private static JButton histogrammeButton = new JButton("Histogramme") ;
+    private static Object[] objet_pay = new Object[3];
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -470,20 +471,8 @@ public class View {
         // Vérifier si une ligne est sélectionnée
         int selectedRow = table_Pay.getSelectedRow();
         if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Pay.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            fenetreModale2 = new secWin_newPay(frame);
-            fenetreModale2.setVisible(true);
+            //fenetreModale2 = new secWin_newPay(frame);
+            
         }
             }
         });
@@ -663,18 +652,6 @@ private static JPanel createContentPanel3() {
         // Vérifier si une ligne est sélectionnée
         int selectedRow = table_Pers.getSelectedRow();
         if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Pers.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
             fenetreModale1 = new secWin_newPers(frame);
             fenetreModale1.setVisible(true);
         }
@@ -1127,6 +1104,11 @@ public static JPanel getButtonPanel_Tarif() {
     return buttonPanel_Tarif;
 }
 //#menu paiement
+
+//objet pay
+public static void setobject_pay(Object[] obj){
+    objet_pay = obj;
+}
 
 //date de debut (le saisi de date eo @gauche)
 public static JSpinner getStartDateSpinner_Pay() {
