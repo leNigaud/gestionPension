@@ -58,6 +58,7 @@ public class secWin_newTar extends JDialog {
                 for (JTextField zonet : textFields) {
                 zonet.setText("");
                 }
+                ajouterButton.setText("Ajouter");
                 dispose();
             }
         });
@@ -80,5 +81,27 @@ public class secWin_newTar extends JDialog {
     public static JButton getAjouterButton() {
     return ajouterButton;
 }
+
+//mampiditra ny valeur anle zone de texte 1/1
+public void setElementValues(String[] newValues) {
+    if (newValues.length != 4) {
+        throw new IllegalArgumentException("Le tableau de valeurs doit avoir une longueur de 4.");
+    }
+    
+    for (int i = 0; i < 4; i++) {
+        textFields[i].setText(newValues[i]);
+    }
+    ajouterButton.setText("Modifier");
+}
+
+//retourner tout les texte saisis au clavier pour tout les zones de texte
+public static String[] getElementValues() {
+    String[] values = new String[textFields.length];
+    for (int i = 0; i < textFields.length; i++) {
+        values[i] = textFields[i].getText();
+    }
+    return values;
+}
+
 
 }

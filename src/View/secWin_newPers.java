@@ -15,7 +15,7 @@ import java.util.Date;
 
 
 public class secWin_newPers extends JDialog {
-    private static JTextField[] textFields = new JTextField[7];
+    private static JTextField[] textFields = new JTextField[6];
     private static String[] values;
     private static JButton ajouterButton = new JButton("Ajouter");
     private static JSpinner DateSpinner_Pers = new JSpinner(new SpinnerDateModel());
@@ -25,10 +25,10 @@ public class secWin_newPers extends JDialog {
     private static String[] options2 = {"marié(e)","célibataire", "divorcé(e)"};
     private static String[] options21 = {"célibataire","marié(e)", "divorcé(e)"};
     private static String[] options22 = { "divorcé(e)","marié(e)","célibataire"};
-    private static String[] options3 = new String[];
-    private JComboBox<String> listeDeroulante1 = new JComboBox<>(options1);
-    private JComboBox<String> listeDeroulante2 = new JComboBox<>(options2);
-    private JComboBox<String> listeDeroulante3 = new JComboBox<>(options3);
+    private static String[] options3 = new String[20];
+    private static JComboBox<String> listeDeroulante1 = new JComboBox<>(options1);
+    private static JComboBox<String> listeDeroulante2 = new JComboBox<>(options2);
+    private static JComboBox<String> listeDeroulante3 = new JComboBox<>(options3);
     
     public secWin_newPers(Frame parent) {
         
@@ -43,12 +43,12 @@ public class secWin_newPers extends JDialog {
     public void actionPerformed(ActionEvent e) {
         // Condition basée sur la sélection de la combobox 1 (listeDeroulante1)
         if(listeDeroulante2.getSelectedItem().equals("marié(e)")){
-            textFields[5].setEnabled(true); 
-            textFields[6].setEnabled(true);
+            textFields[4].setEnabled(true); 
+            textFields[5].setEnabled(true);
         }
         else{
-            textFields[5].setEnabled(false); 
-            textFields[6].setEnabled(false);
+            textFields[4].setEnabled(false); 
+            textFields[5].setEnabled(false);
         }
          
     }
@@ -89,8 +89,8 @@ public class secWin_newPers extends JDialog {
             contentPanel.add(textFields[nb], constraints);nb++;
             }
         }
+        textFields[4].setEnabled(false); 
         textFields[5].setEnabled(false); 
-        textFields[6].setEnabled(false); 
         JPanel buttonPanel = new JPanel();
         //if(View.rowNow != null) textFields[i].setText(View.rowNow[i]);
         String aj = "";
@@ -108,6 +108,7 @@ public class secWin_newPers extends JDialog {
                 for (JTextField zonet : textFields) {
                 zonet.setText("");
                 }
+                ajouterButton.setText("Ajouter");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new java.util.Date());
                 Date currentDate = calendar.getTime();
@@ -144,13 +145,37 @@ public class secWin_newPers extends JDialog {
     return ajouterButton;
 }
 
+public static void setListeDeroulante1DefaultSelection(String value) {
+    listeDeroulante1.setSelectedItem(value);
+}
+
+public static void setListeDeroulante2DefaultSelection(String value) {
+    listeDeroulante2.setSelectedItem(value);
+}
+
+public static void setListeDeroulante3DefaultSelection(String value) {
+    listeDeroulante3.setSelectedItem(value);
+}
+
+public static void setListeDeroulante3Content(String[] content) {
+    listeDeroulante3.removeAllItems();
+    for (String item : content) {
+        listeDeroulante3.addItem(item);
+    }
+}
+
+public static void setAjouterButtonText(String text) {
+    ajouterButton.setText(text);
+}
+
+
 //set content : mampiditra ny contenu an'ny champ 1/1
     public static void setcontent(Object[] entre){
         //"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"
         String im = (String) entre[0];
         String nom = (String) entre[1];
         String prenom = (String) entre[2];
-        //Date nais = (Date) entre[3];
+        Date nais = (Date) entre[3];
         String Diploma = (String) entre[4];
         String contact = (String) entre[5];
         String stat = (String) entre[6];
@@ -164,14 +189,36 @@ public class secWin_newPers extends JDialog {
         textFields[3].setText(contact);
         textFields[4].setText(nomC);
         textFields[5].setText(pnomC);
-        if(stat == options1[0])listeDeroulante1 = new JComboBox<>(options1);
-        else listeDeroulante1 = new JComboBox<>(options11);
-        if(situ == options2[0])listeDeroulante2 = new JComboBox<>(options2);
-        else if(situ == options2[1])listeDeroulante2 = new JComboBox<>(options21);
-        else if(situ == options2[2])listeDeroulante2 = new JComboBox<>(options22);
-        //set anle date sy liste deroulante no reste
+        setListeDeroulante1DefaultSelection(stat);
+        setListeDeroulante2DefaultSelection(situ);
+        setListeDeroulante3DefaultSelection(Diploma);
+        DateSpinner_Pers.setValue(nais);
+        setAjouterButtonText("Modifier");
     }
-    //set anle liste deroulant anle diplome
+
+    public static Object[] getValeursSaisies() {
+    Object[] valeurs = new Object[10];
+
+    // Récupérer les valeurs des JTextField
+    for (int i = 0; i < textFields.length; i++) {
+        valeurs[i] = textFields[i].getText();
+    }
+
+    // Récupérer la valeur sélectionnée dans le JSpinner (Date de naissance)
+    valeurs[3] = DateSpinner_Pers.getValue();
+
+    // Récupérer la valeur sélectionnée dans la liste déroulante 1 (Statut)
+    valeurs[6] = listeDeroulante1.getSelectedItem();
+
+    // Récupérer la valeur sélectionnée dans la liste déroulante 2 (Situation)
+    valeurs[7] = listeDeroulante2.getSelectedItem();
+
+    // Récupérer la valeur sélectionnée dans la liste déroulante 3 (Diplôme)
+    valeurs[4] = listeDeroulante3.getSelectedItem();
+
+    return valeurs;
+}
+
 
 
 }

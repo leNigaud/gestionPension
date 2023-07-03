@@ -78,6 +78,7 @@ class secWin_newPay extends JDialog {
                 calendar.setTime(new java.util.Date());
                 Date currentDate = calendar.getTime();
                 DateSpinner_Pay.setValue(currentDate);
+                ajouterButton.setText("Ajouter");
                 dispose();
             }
         });
@@ -114,6 +115,21 @@ class secWin_newPay extends JDialog {
         textFields[0].setText(one);
         textFields[1].setText(two);
         DateSpinner_Pay.setValue(now);
+        ajouterButton.setText("Modifier");
     }
+
+//get anle elemnt saisis rehetra
+public Object[] getElementValues() {
+    Object[] values = new Object[textFields.length];
+    for (int i = 0; i < textFields.length; i++) {
+        if (i == 2) { // Si c'est le JSpinner pour la date
+            values[i] = DateSpinner_Pay.getValue();
+        } else {
+            values[i] = textFields[i].getText();
+        }
+    }
+    return values;
+}
+
 
 }
