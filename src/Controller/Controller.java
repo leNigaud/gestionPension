@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -53,6 +54,8 @@ public class Controller {
         modifierPers();
         modifierPay();
         modifierTarif();
+
+        genererRecu();
         
     }
     
@@ -72,23 +75,64 @@ public class Controller {
             throw new IllegalArgumentException("Le JSpinner ne contient pas une valeur de type Date.");
         }
     }
-    public Object[][] convertListPerstoObj(List<Personne> personnes) {
-    Object[][] result = new Object[personnes.size()][];
+    private Object[][] convertListPerstoObj(List<Personne> personnes) {
+        Object[][] result = new Object[personnes.size()][];
+        
+        for (int i = 0; i < personnes.size(); i++) {
+            Personne personne = personnes.get(i);
+            
+            Object[] rowData = {
+                personne.getIM(),
+                personne.getNom(),
+                personne.getPrénoms(),
+                personne.getDatenais(),
+                personne.getDiplome(),
+                personne.getContact(),
+                personne.getStatut(),
+                personne.getSituation(),
+                personne.getNomConjoint(),
+                personne.getPrenomConjoint()
+            };
+            
+            result[i] = rowData;
+        }
     
-    for (int i = 0; i < personnes.size(); i++) {
-        Personne personne = personnes.get(i);
+        return result;
+    }
+
+    private List<Personne> convertObjToListPers(Object[][] array) {
+        List<Personne> personnes = new ArrayList<>();
+
+        for (Object[] rowData : array) {
+            String IM = (String) rowData[0];
+            String nom = (String) rowData[1];
+            String prenoms = (String) rowData[2];
+            LocalDate datenais = (LocalDate) rowData[3];
+            String diplome = (String) rowData[4];
+            String contact = (String) rowData[5];
+            String statut = (String) rowData[6];
+            String situation = (String) rowData[7];
+            String nomConjoint = (String) rowData[8];
+            String prenomConjoint = (String) rowData[9];
+
+            Personne personne = new Personne(IM, nom, prenoms, datenais, diplome, contact, statut, situation, nomConjoint, prenomConjoint);
+            personnes.add(personne);
+        }
+
+            return personnes;
+    }
+
+    private Object[][] convertObjToListTarif(List<Tarif> tarifs) {
+    Object[][] result = new Object[tarifs.size()][];
+    
+    for (int i = 0; i < tarifs.size(); i++) {
+        Tarif tarif = tarifs.get(i);
         
         Object[] rowData = {
-            personne.getIM(),
-            personne.getNom(),
-            personne.getPrénoms(),
-            personne.getDatenais(),
-            personne.getDiplome(),
-            personne.getContact(),
-            personne.getStatut(),
-            personne.getSituation(),
-            personne.getNomConjoint(),
-            personne.getPrenomConjoint()
+            tarif.getNum_tarif(),
+            tarif.getDiplome(),
+            tarif.getCatégorie(),
+            tarif.getMontant()
         };
         
         result[i] = rowData;
@@ -164,7 +208,7 @@ public class Controller {
         JOptionPane.showMessageDialog(null, message, "Enregistrement réussie", JOptionPane.INFORMATION_MESSAGE);
     }    
     
-    public boolean contientChiffre(String str) {
+    private boolean contientChiffre(String str) {
     if (str == null || str.isEmpty()) {
         return false;
     }
@@ -395,8 +439,8 @@ public class Controller {
     }
 
      private void modifierPers() {
-        JButton filtrer = myView.getfilterPay();
-            filtrer.addActionListener(new ActionListener() {
+        JButton modifier = myView.getModifyButton_Pers();
+            modifier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
@@ -425,8 +469,8 @@ public class Controller {
     }
 
      private void modifierPay() {
-        JButton filtrer = myView.getfilterPay();
-            filtrer.addActionListener(new ActionListener() {
+        JButton modifier = myView.getModifBut_Pay();
+            modifier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
@@ -434,6 +478,24 @@ public class Controller {
         });
     }
 
+
+    private void genererRecu() {
+        JButton generer = myView.getRecu_Pay();
+            generer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] donnee = myView.getSelectedRowData(myView.getTable_Pay());
+                if (donnee!=null) {
+                    
+                    LocalDate date = LocalDate.parse(donnee[4]);
+                    Payer paie = new Payer(donnee[0], donnee[2], date);
+                    myModel.createPDF(paie, "D:\\");
+                     System.out.println("Creation du recu");
+                }
+                
+            }
+        });
+    }
 
     //menu tarif
     private void showTableTar() {
@@ -455,8 +517,8 @@ public class Controller {
     }
 
     private void modifierTarif() {
-        JButton filtrer = myView.getfilterPay();
-            filtrer.addActionListener(new ActionListener() {
+        JButton modifier = myView.getModifierButton_Tarif();
+            modifier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
