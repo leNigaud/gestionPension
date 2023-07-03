@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +18,10 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DateEditor;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
 
 import Data.Payer;
 import Data.Personne;
@@ -37,10 +40,16 @@ public class Controller {
         ajouterPersonne();
         ajouterPaiement();
         ajouterTarif();
+
+        showTablePay();
+        showTablePers();
+        showTableTar();
+
+        filtrerTable();
         
     }
-
-    public static LocalDate convertirEnLocalDateJava(JSpinner jSpinner) {
+    
+    private LocalDate convertirEnLocalDateJava(JSpinner jSpinner) {
         // Obtenir la valeur sélectionnée dans le JSpinner
         Object valeurSelectionnee = jSpinner.getValue();
 
@@ -58,7 +67,7 @@ public class Controller {
 
     
     //authentifications
-    public boolean areFieldsNotEmpty(JTextField[] fields) {
+    private boolean areFieldsNotEmpty(JTextField[] fields) {
         for (JTextField field : fields) {
             // if (field ==null) return false;
             String text = field.getText();
@@ -69,7 +78,7 @@ public class Controller {
         return true;
     }
 
-    public boolean areFirstSevenFieldsNotEmpty(JTextField[] fields) {
+    private boolean areFirstSevenFieldsNotEmpty(JTextField[] fields) {
         for (int i = 0; i < 7; i++) {
             if (fields[i].getText().isEmpty()) {
                 return false;
@@ -78,7 +87,7 @@ public class Controller {
         return true;
     }
 
-    public boolean isSpinnerValueValid(JSpinner spinner) {
+    private boolean isSpinnerValueValid(JSpinner spinner) {
             Object value = spinner.getValue();
 
             // Vérification si le JSpinner est vide
@@ -109,36 +118,36 @@ public class Controller {
             return true;
     }
 
-    public boolean containsOnlyNumbers(JTextField field) {
+    private boolean containsOnlyNumbers(JTextField field) {
         String text = field.getText();
         return text.matches("\\d+");
     }
 
     //feedback
-    public void showErrorMessage(String message) {
+    private void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(null, message, "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
     }
 
-    public void showSuccessMessage(String message) {
+    private void showSuccessMessage(String message) {
         JOptionPane.showMessageDialog(null, message, "Enregistrement réussie", JOptionPane.INFORMATION_MESSAGE);
     }    
     
 
     //reinitialisation des valeurs
-    public void resetTextFields(JTextField[] fields) {
+    private void resetTextFields(JTextField[] fields) {
         for (JTextField field : fields) {
             field.setText("");
          }
     }
 
-    public void resetDate(JSpinner spinner) {
+    private void resetDate(JSpinner spinner) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String currentDate = dateFormat.format(new Date());
         spinner.setValue(currentDate);
 
     }
 
-    public void setCurrentDate(JSpinner spinner) {
+    private void setCurrentDate(JSpinner spinner) {
         Date currentDate = new Date();
         spinner.setModel(new SpinnerDateModel(currentDate, null, null, java.util.Calendar.DAY_OF_MONTH));
     }
@@ -186,6 +195,7 @@ public class Controller {
 
                         //fermer la fenetre
                         myView.getWinPers().dispose();
+                        showTablePers();
                         System.out.println("ajout de personne reussi");
                     } else
                         showErrorMessage("L'IM doit contenir un nombre");
@@ -230,6 +240,7 @@ public class Controller {
 
                             //fermer la fenetre
                             myView.getWinPers().dispose();
+                            showTablePay();
                             System.out.println("ajout de paiement reussi");
                     } else 
                         showErrorMessage("Vos devez saisir un nombre sur les champs \"IM\" et \"numero de tarif\"");
@@ -273,6 +284,7 @@ public class Controller {
 
                         //fermer la fenetre
                         myView.getWinTarif().dispose();
+                        showTableTar();
                         System.out.println("ajout de tarif reussi");
                     } else
                         showErrorMessage("Vos devez saisir un nombre sur le champ \"montant\"");
@@ -286,6 +298,70 @@ public class Controller {
     }
 
     //menu personne
+    private void showTablePers() {
+        List<Personne> personnes = myModel.getAllPersons();
+        Object[][] matrix = new Object[personnes.size()][];
+        
+        for (int i = 0; i < personnes.size(); i++) {
+            Personne personne = personnes.get(i);
+            Object[] rowData = {
+                personne.getIM(),
+                personne.getNom(),
+                personne.getPrénoms(),
+                personne.getDatenais(),
+                personne.getDiplome(),
+                personne.getContact(),
+                personne.getStatut(),
+                personne.getSituation(),
+                personne.getNomConjoint(),
+                personne.getPrenomConjoint()
+            };
+            matrix[i] = rowData;
+        }
+        myView.setTableDataPers(matrix);
+    }
+
+    //menu paiement
+    private void showTablePay() {
+     
+        myView.setTableDataPay(myModel.getObjectPay());
+
+    }
+
+    private void filtrerTable() {
+        JButton filtrer = myView.getfilterPay();
+            filtrer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDate datedeb = convertirEnLocalDateJava(myView.getStartDateSpinner_Pay());
+                LocalDate datefin = convertirEnLocalDateJava(myView.getEndDateSpinner_Pay());
+                myView.setTableDataPay(myModel.FiltrerDatePay(datedeb,datefin));
+            }
+        });
+    }
+
+    
+
+    
+
+    //menu paiement
+    private void showTableTar() {
+        List<Tarif> tarifs = myModel.getAllTarifs();
+        Object[][] matrix = new Object[tarifs.size()][];
+        
+        for (int i = 0; i < tarifs.size(); i++) {
+            Tarif tarif = tarifs.get(i);
+            Object[] rowData = {
+                tarif.getNum_tarif(),
+                tarif.getDiplome(),
+                tarif.getCatégorie(),
+                tarif.getMontant()
+            };
+            matrix[i] = rowData;
+        }
+        myView.setTableDataTarif(matrix);
+
+    }
 
 
 }

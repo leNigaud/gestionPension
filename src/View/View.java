@@ -61,7 +61,7 @@ public class View {
     private static JButton filterPay = new JButton("Filtrer");
     private static JButton modifBut_Pay = new JButton("Modifier");
     private static JButton delBut_Pay = new JButton("Supprimer");
-    private static JButton recu_Pay = new JButton("Genrer un reçu");
+    private static JButton recu_Pay = new JButton("Générer un reçu");
     private static JLabel label_Pay;
     private static JLabel label1_Pay;
     private static JLabel label2_Pay;

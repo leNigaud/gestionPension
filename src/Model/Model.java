@@ -163,6 +163,7 @@ public class Model {
         return allTarifs;
     }
 
+    
     //Display/Read all Payer 
     public List<Payer> getAllPayers() {
         List<Payer> allPayers = new ArrayList<>();
@@ -182,6 +183,89 @@ public class Model {
             e.printStackTrace();
         }
         return allPayers;
+    }
+
+    public Object[][] getObjectPay() {
+ 
+        Object[][] rowDataArray = null;
+    
+        try {
+            String query = "SELECT personne.\"IM\", personne.nom, payer.num_tarif, tarif.montant, payer.date FROM personne, payer, tarif WHERE personne.\"IM\" = payer.\"IM\" AND tarif.num_tarif = payer.num_tarif";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            List<Object[]> rowDataList = new ArrayList<>();
+
+            while (rs.next()) {
+                String IM = rs.getString("IM");
+                String nom = rs.getString("nom");
+                String numTarif = rs.getString("num_tarif");
+                int montant = rs.getInt("montant");
+                LocalDate date = rs.getDate("date").toLocalDate();
+
+                Object[] rowData = {
+                        IM,
+                        nom,
+                        numTarif,
+                        montant,
+                        date
+                };
+
+                rowDataList.add(rowData);
+            }
+
+            rowDataArray = new Object[rowDataList.size()][];
+            rowDataList.toArray(rowDataArray);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return rowDataArray;
+    }
+    //Filtrer par date 
+    public Object[][] FiltrerDatePay(LocalDate date1,LocalDate date2) {
+ 
+        Object[][] rowDataArray = null;
+    
+        try {
+            String query = "SELECT personne.\"IM\", personne.nom, payer.num_tarif, tarif.montant, payer.date FROM personne, payer, tarif WHERE personne.\"IM\" = payer.\"IM\" AND tarif.num_tarif = payer.num_tarif AND payer.date BETWEEN ? AND ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            java.sql.Date date11 = java.sql.Date.valueOf(date1); 
+            java.sql.Date date22 = java.sql.Date.valueOf(date2); 
+            
+            ps.setDate(1, date11);
+            ps.setDate(2, date22);
+            
+            List<Object[]> rowDataList = new ArrayList<>();
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String IM = rs.getString("IM");
+                String nom = rs.getString("nom");
+                String numTarif = rs.getString("num_tarif");
+                int montant = rs.getInt("montant");
+                LocalDate date = rs.getDate("date").toLocalDate();
+
+                Object[] rowData = {
+                        IM,
+                        nom,
+                        numTarif,
+                        montant,
+                        date
+                };
+
+                rowDataList.add(rowData);
+            }
+
+            rowDataArray = new Object[rowDataList.size()][];
+            rowDataList.toArray(rowDataArray);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return rowDataArray;
     }
 
     //Modify/Update Personne 
