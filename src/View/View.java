@@ -363,27 +363,6 @@ public class View {
     contentPanel2_New.add(label_New);
     contentPanel1_New.add(contentPanel2_New);
 
-    
-    button1_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale1.setVisible(true);
-            }
-        });
-    
-    button2_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale2.setVisible(true);
-            }
-        });
-    //secWin_newTar
-    button3_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale3.setVisible(true);
-            }
-        });
     button1_New.setPreferredSize(new Dimension(180, 157));
     button2_New.setPreferredSize(new Dimension(180, 157));
     button3_New.setPreferredSize(new Dimension(180, 157));
@@ -795,11 +774,11 @@ public static void setTableDataPers(Object[][] data) {
 
     //m-afficher message
     public static void showDangerDialog(String title, String message) {
-        JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
     }
 
     public static void showInfoDialog(String title, String message) {
-        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
 
