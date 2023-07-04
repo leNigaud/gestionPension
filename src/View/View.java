@@ -14,7 +14,6 @@ import Data.*;
 import Model.*;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-//date ; zone de texte ; checkbox; tableau
 
 public class View {
 
@@ -465,17 +464,6 @@ public class View {
     endDateSpinner_Pay.setForeground(dateForeground_Pay);
     endDateSpinner_Pay.setBackground(dateBackground_Pay);
     endDateSpinner_Pay.setBorder(dateBorder_Pay);
-
-    modifBut_Pay.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Pay.getSelectedRow();
-        if (selectedRow != -1) {
-            //fenetreModale2 = new secWin_newPay(frame);
-            
-        }
-            }
-        });
     
 
     Font buttonFont_Pay = new Font("Bookman Old Style", Font.PLAIN, 20);
@@ -526,14 +514,7 @@ public class View {
 
     contentPanel_Pay.add(labelPanel_Pay);
     contentPanel_Pay.add(topPanel_Pay);
-/*
-    columnNames_Pay = new String[]{"IM", "Nom", "Numero de Tarif", "Montant", "Date de Paiement"};
-    data_Pay = new Object[][]{
-        //{"1", "1", "1", "1","1"},
-        //{"54", "2", "28", "265","266"}
-    };
-    table_Pay = new JTable(data_Pay, columnNames_Pay);
-*/
+
     header_Pay = table_Pay.getTableHeader();
     header_Pay.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
     header_Pay.setBackground(new Color(176, 224, 230));
@@ -647,17 +628,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    modifyButton_Pers.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Pers.getSelectedRow();
-        if (selectedRow != -1) {
-            fenetreModale1 = new secWin_newPers(frame);
-            fenetreModale1.setVisible(true);
-        }
-                
-            }
-        });
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
@@ -673,15 +643,6 @@ private static JPanel createContentPanel3() {
 
     // Ajout du panel de la table
     tablePanel_Pers = new JPanel(new BorderLayout());
-    /*
-    columnNames_Pers = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
-    data_Pers = new Object[][]{
-        //{"im","nom","pnom","22/12/1995","dipom","contact","stats","situ","conj","Pconj"},
-        //{"","","","","","","","","",""},
-        //{"","","","","","","","","",""},
-        //{"","","","","","","","","",""} 
-    };
-    table_Pers = new JTable(data_Pers, columnNames_Pers);*/
 
     header_Pers = table_Pers.getTableHeader();
     header_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -726,29 +687,6 @@ private static JPanel createContentPanel4() {
     label_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 30));
     label_Tarif.setForeground(new Color(176, 224, 230));
 
-    modifierButton_Tarif.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Tarif.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Tarif.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            fenetreModale3 = new secWin_newTar(frame);
-            fenetreModale3.setVisible(true);
-        }
-                
-            }
-        });
         
     modifierButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     modifierButton_Tarif.setForeground(Color.WHITE);
@@ -758,26 +696,6 @@ private static JPanel createContentPanel4() {
     supprimerButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
-
-    /*columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
-    data_Tarif = new Object[][]{
-          {"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
-          {"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
-          {"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
-    };
-    table_Tarif = new JTable(data_Tarif, columnNames_Tarif);
-    table_Tarif.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            String[] rowData = getSelectedRowData(table_Tarif);
-            
-            if (rowData != null) {
-                rowNow = rowData;
-            }
-        }
-    }
-});*/
 
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -875,6 +793,15 @@ public static void setTableDataPers(Object[][] data) {
         }
     }
 
+    //m-afficher message
+    public static void showDangerDialog(String title, String message) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void showInfoDialog(String title, String message) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 
 //getters
@@ -902,15 +829,15 @@ public static JLabel getLabel_New() {
     return label_New;
 }
 
-public static JButton getButton1_New() {
+public static JButton getButton1_New() {//nouvelle personne
     return button1_New;
 }
 
-public static JButton getButton2_New() {
+public static JButton getButton2_New() {//nouveau paiement
     return button2_New;
 }
 
-public static JButton getButton3_New() {
+public static JButton getButton3_New() {//nouveau tarif
     return button3_New;
 }
 
@@ -1130,8 +1057,8 @@ public static JButton getDelBut_Pay() {
     return delBut_Pay;
 }
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
-public static boolean afficherQuestionOuiNon(String phrase) {
-    int choix = JOptionPane.showOptionDialog(null,phrase, "Titre", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+public static boolean afficherQuestionOuiNon(String phrase,String titre) {
+    int choix = JOptionPane.showOptionDialog(null,phrase,titre, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 
