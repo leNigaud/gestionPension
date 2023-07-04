@@ -1162,7 +1162,7 @@ public static JButton getDelBut_Pay() {
 }
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
 public static boolean afficherQuestionOuiNon(String phrase) {
-    int choix = JOptionPane.showOptionDialog(null,phrase, "Titre", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+    int choix = JOptionPane.showOptionDialog(null,phrase, "Avertissement", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 

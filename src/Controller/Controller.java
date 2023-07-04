@@ -57,6 +57,10 @@ public class Controller {
 
         genererRecu();
         creerHisto();
+
+        supprimerPay();
+        supprimerPers();
+        supprimerTarif();
         
     }
     
@@ -449,6 +453,23 @@ public class Controller {
         });
     }
 
+    private void supprimerPers() {
+        JButton supprimer = myView.getDeleteButton_Pers();
+            supprimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] donnee = myView.getSelectedRowData(myView.getTable_Pers());
+                if (donnee!=null) {
+                    if (myView.afficherQuestionOuiNon("Vous êtes sûre de vouloir supprimer cette personne de la base de données?")) { 
+                        myModel.deletePerson(donnee[0]);
+                        showTablePers();
+                    }
+                }
+
+            }
+        });
+    }
+
 
     //menu paiement
     private void showTablePay() {
@@ -491,6 +512,7 @@ public class Controller {
                     LocalDate date = LocalDate.parse(donnee[4]);
                     Payer paie = new Payer(donnee[0], donnee[2], date);
                     myModel.createPDF(paie, "D:\\");
+                    showSuccessMessage("Vous pouvez réupérer votre reçu à 'D:\\' ");
                      System.out.println("Creation du recu");
                 }
                 
@@ -498,6 +520,22 @@ public class Controller {
         });
     }
 
+    private void supprimerPay() {
+        JButton supprimer = myView.getDelBut_Pay();
+            supprimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] donnee = myView.getSelectedRowData(myView.getTable_Pay());
+                if (donnee!=null) {
+                    if (myView.afficherQuestionOuiNon("Vous êtes sûre de vouloir supprimer ce paiement de la base de données?"))    
+                        {
+                            myModel.deletePerson(donnee[0]);
+                            showTablePay();
+                        }
+                }
+            }
+        });
+    }
     //menu tarif
     private void showTableTar() {
         List<Tarif> tarifs = myModel.getAllTarifs();
@@ -526,6 +564,23 @@ public class Controller {
             }
         });
     }
+
+    private void supprimerTarif() {
+        JButton supprimer = myView.getSupprimerButton_Tarif();
+            supprimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] donnee = myView.getSelectedRowData(myView.getTable_Tarif());
+                if (donnee!=null) {
+                    if (myView.afficherQuestionOuiNon("Vous êtes sûre de vouloir supprimer ce tarif de la base de données?"))  {
+                        myModel.deleteTarif(donnee[0]);
+                        showTableTar();
+                    }
+                }
+            }
+        });
+    }
+
 
     //histogramme
     private void creerHisto() {    
