@@ -56,6 +56,7 @@ public class Controller {
         modifierTarif();
 
         genererRecu();
+        creerHisto();
         
     }
     
@@ -526,5 +527,14 @@ public class Controller {
         });
     }
 
-
+    //histogramme
+    private void creerHisto() {    
+        JButton histo = myView.gethistogrammeButton();
+            histo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                myModel.showHistogram();
+            }
+        });
+    }
 }
