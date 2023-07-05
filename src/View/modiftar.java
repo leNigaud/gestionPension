@@ -14,12 +14,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 
-public class secWin_newTar extends JDialog {
+public class modiftar extends JDialog {
     private static JTextField[] textFields = new JTextField[4];
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
     private static JButton ajouterButton = new JButton("Ajouter");
-    public secWin_newTar(Frame parent,String Buttname,String title) {
+    public modiftar(Frame parent,String Buttname,String title) {
         super(parent, title, true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);

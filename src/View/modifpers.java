@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class secWin_newPers extends JDialog {
+public class modifpers extends JDialog {
     private static JTextField[] textFields = new JTextField[6];
     private static String[] values;
     private static JButton ajouterButton = new JButton("Ajouter");
@@ -38,7 +38,7 @@ public class secWin_newPers extends JDialog {
     private static JComboBox<String> listeDeroulante2 = new JComboBox<>(options2);
     private static JComboBox<String> listeDeroulante3 = new JComboBox<>(options3);
     
-    public secWin_newPers(Frame parent,String Buttname,String title) {
+    public modifpers(Frame parent,String Buttname,String title) {
         
         super(parent, title, true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -16,7 +16,6 @@ import Data.*;
 import Model.*;
 
 import javax.swing.table.DefaultTableModel;
-//date ; zone de texte ; checkbox; tableau
 
 public class View {
 
@@ -24,9 +23,15 @@ public class View {
     public static JFrame frame;
     public static String[] rowNow = new String[10];
     
-    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
-    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
-    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame);
+    private static modifpay fenetreModifPay = new modifpay(frame,"Modifier","Modifier un paiement");
+    private static modiftar fenetreModifTar = new modiftar(frame,"Modifier","Modifier un tarif"); 
+    private static modifpers fenetreModifPers = new modifpers(frame,"Modifier","Modifier les informations d'une personne");
+
+    
+    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame,"Ajouter","Ajouter un nouveau paiement");
+    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame,"Ajouter","Ajouter un nouveau tarif"); 
+    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame,"Ajouter","Ajouter une nouvelle personne");
+    
 
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
@@ -118,6 +123,7 @@ public class View {
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
     private static JButton histogrammeButton = new JButton("Histogramme") ;
+    private static Object[] objet_pay = new Object[3];
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -365,27 +371,6 @@ public class View {
     contentPanel2_New.add(label_New);
     contentPanel1_New.add(contentPanel2_New);
 
-    
-    button1_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale1.setVisible(true);
-            }
-        });
-    
-    button2_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale2.setVisible(true);
-            }
-        });
-    //secWin_newTar
-    button3_New.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                fenetreModale3.setVisible(true);
-            }
-        });
     button1_New.setPreferredSize(new Dimension(180, 157));
     button2_New.setPreferredSize(new Dimension(180, 157));
     button3_New.setPreferredSize(new Dimension(180, 157));
@@ -466,29 +451,6 @@ public class View {
     endDateSpinner_Pay.setForeground(dateForeground_Pay);
     endDateSpinner_Pay.setBackground(dateBackground_Pay);
     endDateSpinner_Pay.setBorder(dateBorder_Pay);
-
-    modifBut_Pay.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Pay.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Pay.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            fenetreModale2 = new secWin_newPay(frame);
-            fenetreModale2.setVisible(true);
-        }
-            }
-        });
     
 
     Font buttonFont_Pay = new Font("Bookman Old Style", Font.PLAIN, 20);
@@ -539,14 +501,7 @@ public class View {
 
     contentPanel_Pay.add(labelPanel_Pay);
     contentPanel_Pay.add(topPanel_Pay);
-/*
-    columnNames_Pay = new String[]{"IM", "Nom", "Numero de Tarif", "Montant", "Date de Paiement"};
-    data_Pay = new Object[][]{
-        //{"1", "1", "1", "1","1"},
-        //{"54", "2", "28", "265","266"}
-    };
-    table_Pay = new JTable(data_Pay, columnNames_Pay);
-*/
+
     header_Pay = table_Pay.getTableHeader();
     header_Pay.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
     header_Pay.setBackground(new Color(176, 224, 230));
@@ -660,29 +615,6 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
-    modifyButton_Pers.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Pers.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Pers.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            fenetreModale1 = new secWin_newPers(frame);
-            fenetreModale1.setVisible(true);
-        }
-                
-            }
-        });
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
@@ -698,15 +630,6 @@ private static JPanel createContentPanel3() {
 
     // Ajout du panel de la table
     tablePanel_Pers = new JPanel(new BorderLayout());
-    /*
-    columnNames_Pers = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
-    data_Pers = new Object[][]{
-        //{"im","nom","pnom","22/12/1995","dipom","contact","stats","situ","conj","Pconj"},
-        //{"","","","","","","","","",""},
-        //{"","","","","","","","","",""},
-        //{"","","","","","","","","",""} 
-    };
-    table_Pers = new JTable(data_Pers, columnNames_Pers);*/
 
     header_Pers = table_Pers.getTableHeader();
     header_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -751,29 +674,6 @@ private static JPanel createContentPanel4() {
     label_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 30));
     label_Tarif.setForeground(new Color(176, 224, 230));
 
-    modifierButton_Tarif.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        int selectedRow = table_Tarif.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer les données de la ligne sélectionnée
-            TableModel model = table_Tarif.getModel();
-            int columnCount = model.getColumnCount();
-            String[] rowData = new String[columnCount];
-
-            for (int i = 0; i < columnCount; i++) {
-                rowData[i] = model.getValueAt(selectedRow, i).toString();
-            }
-
-            // Utiliser le tableau de données (rowData) comme vous le souhaitez
-            // ...
-            rowNow = rowData;
-            fenetreModale3 = new secWin_newTar(frame);
-            fenetreModale3.setVisible(true);
-        }
-                
-            }
-        });
         
     modifierButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     modifierButton_Tarif.setForeground(Color.WHITE);
@@ -783,26 +683,6 @@ private static JPanel createContentPanel4() {
     supprimerButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
-
-    /*columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
-    data_Tarif = new Object[][]{
-          {"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
-          {"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
-          {"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
-    };
-    table_Tarif = new JTable(data_Tarif, columnNames_Tarif);
-    table_Tarif.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            String[] rowData = getSelectedRowData(table_Tarif);
-            
-            if (rowData != null) {
-                rowNow = rowData;
-            }
-        }
-    }
-});*/
 
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -902,6 +782,15 @@ public static void setTableDataPers(Object[][] data) {
         }
     }
 
+    //m-afficher message
+    public static void showDangerDialog(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void showInfoDialog(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 
 //methode manao update anle table hita maso eo .. afaka modifier-na raha tsy mety
@@ -938,15 +827,15 @@ public static JLabel getLabel_New() {
     return label_New;
 }
 
-public static JButton getButton1_New() {
+public static JButton getButton1_New() {//nouvelle personne
     return button1_New;
 }
 
-public static JButton getButton2_New() {
+public static JButton getButton2_New() {//nouveau paiement
     return button2_New;
 }
 
-public static JButton getButton3_New() {
+public static JButton getButton3_New() {//nouveau tarif
     return button3_New;
 }
 
@@ -1141,6 +1030,11 @@ public static JPanel getButtonPanel_Tarif() {
 }
 //#menu paiement
 
+//objet pay
+public static void setobject_pay(Object[] obj){
+    objet_pay = obj;
+}
+
 //date de debut (le saisi de date eo @gauche)
 public static JSpinner getStartDateSpinner_Pay() {
     return startDateSpinner_Pay;
@@ -1240,6 +1134,16 @@ public static secWin_newPay getWinPay(){
 }
 public static secWin_newTar getWinTarif(){
     return fenetreModale3;
+}
+//getters anle instance anle fenetre modals
+public static modifpers getWinPersModif(){
+    return fenetreModifPers;
+}
+public static modifpay getWinPayModif(){
+    return fenetreModifPay;
+}
+public static modiftar getWinTarifModif(){
+    return fenetreModifTar;
 }
 
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay

@@ -213,7 +213,22 @@ public class Model {
         return allTarifs;
     }
 
-    
+    public List<String> getDiplome() {
+        List<String> allTarifs = new ArrayList<>();
+        try {
+            String query = "SELECT diplome FROM tarif";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String diplome = rs.getString("diplome");
+                allTarifs.add(diplome);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allTarifs;
+    }
+
     //Display/Read all Payer 
     public List<Payer> getAllPayers() {
         List<Payer> allPayers = new ArrayList<>();
@@ -543,6 +558,7 @@ public class Model {
         }
         return tarif;
     }
+  
 
     //Verify if a person is dead
     public boolean isDead(Personne personne) {

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DateEditor;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
@@ -38,9 +39,19 @@ public class Controller {
         this.myModel=myModel;
         this.myView=myView;
         
-        ajouterPersonne();
+         
         ajouterPaiement();
+        ajouterPersonne();
         ajouterTarif();
+
+        modifierPay();
+        modifierPers();
+        modifierTarif();
+
+        afficherPers();
+        afficherPay();
+        afficherTar();
+        
 
         showTablePay();
         showTablePers();
@@ -128,23 +139,38 @@ public class Controller {
     }
 
     private Object[][] convertObjToListTarif(List<Tarif> tarifs) {
-    Object[][] result = new Object[tarifs.size()][];
-    
-    for (int i = 0; i < tarifs.size(); i++) {
-        Tarif tarif = tarifs.get(i);
+        Object[][] result = new Object[tarifs.size()][];
         
-        Object[] rowData = {
-            tarif.getNum_tarif(),
-            tarif.getDiplome(),
-            tarif.getCatégorie(),
-            tarif.getMontant()
-        };
-        
-        result[i] = rowData;
+        for (int i = 0; i < tarifs.size(); i++) {
+            Tarif tarif = tarifs.get(i);
+
+            Object[] rowData = {
+                tarif.getNum_tarif(),
+                tarif.getDiplome(),
+                tarif.getCatégorie(),
+                tarif.getMontant()
+            };
+
+            result[i] = rowData;
+        }
+
+        return result;
     }
-    
-    return result;
-}
+
+    public static Object[] convertirStringEnObject(String[] strings) {
+         if (strings == null) {
+        return null; // Retourne null si le tableau strings est null
+        }
+        
+        
+        Object[] objects = new Object[strings.length];
+        
+        for (int i = 0; i < strings.length; i++) {
+            objects[i] = strings[i];
+        }
+
+        return objects;
+    }
 
     
     //authentifications
@@ -204,6 +230,15 @@ public class Controller {
         return text.matches("\\d+");
     }
 
+
+    public static boolean areObjetsNotEmpty(Object[] array) {
+       for (Object element : array) {
+           if (element == null || (element instanceof String && ((String) element).isEmpty())) {
+               return false;
+           }
+       }
+       return true;
+    }   
     //feedback
     private void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(null, message, "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
@@ -246,63 +281,184 @@ public class Controller {
         spinner.setModel(new SpinnerDateModel(currentDate, null, null, java.util.Calendar.DAY_OF_MONTH));
     }
 
+    //getter
+
+    public Object[] getSelectedRowData(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int columnCount = table.getColumnCount();
+            Object[] rowData = new Object[columnCount];
+
+            for (int i = 0; i < columnCount; i++) {
+                // if (i==3) 
+                //     rowData[i] = (Date) table.getValueAt(selectedRow, i);
+                // else
+                     rowData[i] = table.getValueAt(selectedRow, i);
+            }
+
+            return rowData;
+        }
+
+        return null;
+    }
+
+    private void setDiplome() {
+        
+      String[] diplomes = new String[myModel.getDiplome().size()];    
+                        int i =0;    
+                        for (String diplome : myModel.getDiplome()) {
+                                   diplomes[i] = diplome;
+                                   
+                                    i++;
+                        }        
+                        myView.getWinPers().setListeDeroulante3Content(diplomes);
+
+    }
+    //afficher les sous fenetres 
+
+    private void afficherPers() {
+
+        JButton nouveau = myView.getButton1_New(),
+                modifier = myView.getModifyButton_Pers();
+            
+                nouveau.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        setDiplome();
+                        myView.getWinPers().setVisible(true);
+                    }
+                });
+                
+                modifier.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Object[] donnee = getSelectedRowData(myView.getTable_Pers());
+                        setDiplome();
+                        if (donnee!=null) {
+                             myView.getWinPersModif().setcontent(donnee);
+                            myView.getWinPersModif().setVisible(true);
+                        }
+                }
+                
+         });
+    }
+
+    private void afficherPay() {
+        JButton nouveau = myView.getButton2_New(),
+                modifier = myView.getModifBut_Pay();
+            
+                nouveau.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        myView.getWinPay().setVisible(true);
+                       
+                    }
+                });
+
+                modifier.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Object[] donnee = getSelectedRowData(myView.getTable_Pay());
+                        if (donnee!=null) {
+                             myView.getWinPayModif().setcontent(donnee);
+                            myView.getWinPayModif().setVisible(true);
+                        }
+                    }
+
+                });
+        
+    }
+    private void afficherTar() {
+        JButton nouveau = myView.getButton3_New(),
+                modifier = myView.getModifierButton_Tarif();
+            
+                nouveau.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        myView.getWinTarif().setVisible(true);
+                        ajouterTarif();
+                    }
+                });
+
+                modifier.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String[] donnee = myView.getSelectedRowData(myView.getTable_Tarif());
+                        if (donnee!=null) {
+                            myView.getWinTarifModif().setElementValues(donnee);
+                            myView.getWinTarifModif().setVisible(true);
+                        }   
+
+                    }
+                
+                });
+    }
+
+
 
     //ajouter une personne dans la base de donnees
     
     private void ajouterPersonne() {
        JButton boutonAjouter = myView.getWinPers().getAjouterButton();
        
-       
-        // final JTextField[] infoPers = info_Pers.clone(); // Créer une copie finale de infoPers
+       // Supprimer tous les écouteurs d'événements existants 
+        // ActionListener[] listeners = boutonAjouter.getActionListeners();
+        // for (ActionListener listener : listeners) {
+        //         boutonAjouter.removeActionListener(listener);
+        // }
+    
 
        boutonAjouter.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
-                JTextField[] infoPers = new JTextField[9];
-                    infoPers = myView.getWinPers().getTextFields();
-
-                //recuperation de la date
-                JSpinner date = myView.getWinPers().getBirthDate(); 
-
-                if (areFirstSevenFieldsNotEmpty(infoPers) && isSpinnerValueValid(date)) {
-                    if (containsOnlyNumbers(infoPers[0])) {    
-                        LocalDate dateNais = convertirEnLocalDateJava(date);
-                        Personne personneAjouter = new Personne(
-                            infoPers[0].getText(),
-                            infoPers[1].getText(),
-                            infoPers[2].getText(),
-                            dateNais,
-                            infoPers[3].getText(),
-                            infoPers[4].getText(),
-                            infoPers[5].getText(),
-                            infoPers[6].getText(),
-                            infoPers[7].getText(),
-                            infoPers[8].getText()
-                        );
+                System.out.println("Ajouter personne");
                 
-                        myModel.addPersonne(personneAjouter);
-                        showSuccessMessage("Les informations de la personne ont été bien enregistrées");
+                Object[] infoPers = myView.getWinPers().getValeursSaisies();
+                
+               
+                Personne personneAjouter = new Personne(
+                    infoPers[0].toString(),
+                    infoPers[1].toString(),
+                    infoPers[2].toString(),
+                    (LocalDate) infoPers[3], 
+                    infoPers[4].toString(),
+                    infoPers[5].toString(),
+                    infoPers[6].toString(),
+                    infoPers[7].toString(),
+                    infoPers[8].toString(),
+                    infoPers[9].toString()
+                );
+                      
+                
+                    myModel.addPersonne(personneAjouter);
+                    showSuccessMessage("Les informations de la personne ont été bien enregistrées");
                         
                         //reinitialiser les champs
-                        resetTextFields(infoPers);
-                        setCurrentDate(date);
+                        // resetTextFields(infoPers);
+                        // setCurrentDate(date);
 
                         //fermer la fenetre
                         myView.getWinPers().dispose();
                         showTablePers();
                         System.out.println("ajout de personne reussi");
-                    } else
-                        showErrorMessage("L'IM doit contenir un nombre");
-                } else 
-                    showErrorMessage("Vous avez mal rempli au moins un des champs");
+                    
+                    //     showErrorMessage("L'IM doit contenir un nombre");
+                
+                    // showErrorMessage("Vous avez mal rempli au moins un des champs");
             
-           }
+                }
        });
     }
 
     //ajouter un paiement
     private void ajouterPaiement() {
         JButton boutonAjouter = myView.getWinPay().getAjouterButton();
+
+        // Supprimer tous les écouteurs d'événements existants 
+        ActionListener[] listeners = boutonAjouter.getActionListeners();
+        for (ActionListener listener : listeners) {
+                boutonAjouter.removeActionListener(listener);
+        }
 
         boutonAjouter.addActionListener(new ActionListener() {
            @Override

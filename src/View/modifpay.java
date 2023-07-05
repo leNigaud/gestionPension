@@ -26,14 +26,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class secWin_newPay extends JDialog {
+public class modifpay extends JDialog {
     private static JSpinner DateSpinner_Pay = new JSpinner(new SpinnerDateModel());
     private static JSpinner.DateEditor DateEditor_Pay = new JSpinner.DateEditor(DateSpinner_Pay, "dd/MM/yyyy");
     private static JTextField[] textFields = new JTextField[2];
     private static JButton ajouterButton = new JButton("Ajouter");
     // Récupérer les valeurs saisies dans les champs de texte
     private static String[] values;
-    public secWin_newPay(Frame parent,String Buttname,String title) {
+    public modifpay(Frame parent,String Buttname,String title) {
         super(parent, title , true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
