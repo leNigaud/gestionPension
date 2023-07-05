@@ -827,7 +827,7 @@ public class Model {
 
     //show the histogram of all ages of person
     public void showHistogram() {
-        createHistogram(getAllAges());
+    
     }
 
     //helper for showHistogram()

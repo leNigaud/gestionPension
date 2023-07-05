@@ -22,7 +22,7 @@ public class Main {
             // modifpay pay = new modifpay(new Frame(),"none","none");
             //  pay.setVisible(true);
             //  pay2.setVisible(true);
-
+        
 
     }
 

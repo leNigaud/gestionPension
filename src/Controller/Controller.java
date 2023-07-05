@@ -376,7 +376,6 @@ public class Controller {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         myView.getWinTarif().setVisible(true);
-                        ajouterTarif();
                     }
                 });
 
@@ -395,6 +394,9 @@ public class Controller {
     }
 
 
+    public static LocalDate convertDateToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
 
     //ajouter une personne dans la base de donnees
     
@@ -414,23 +416,32 @@ public class Controller {
                 System.out.println("Ajouter personne");
                 
                 Object[] infoPers = myView.getWinPers().getValeursSaisies();
-                
+                String conjoint = "";
+                String conjoint2 = "";
+                String contact = myView.getWinPers().getTextFields(3).getText();
                
+                if (infoPers[8] != null && infoPers[9] != null) {
+                    conjoint = infoPers[8].toString();
+                    conjoint2 = infoPers[9].toString();
+                }
                 Personne personneAjouter = new Personne(
                     infoPers[0].toString(),
                     infoPers[1].toString(),
                     infoPers[2].toString(),
-                    (LocalDate) infoPers[3], 
+                    convertDateToLocalDate((Date) infoPers[3]),
                     infoPers[4].toString(),
                     infoPers[5].toString(),
                     infoPers[6].toString(),
                     infoPers[7].toString(),
-                    infoPers[8].toString(),
-                    infoPers[9].toString()
+                    conjoint,
+                    conjoint2
+                    
                 );
                       
                 
                     myModel.addPersonne(personneAjouter);
+                    System.out.println(infoPers[4].toString());
+                    System.out.println(infoPers[5].toString());
                     showSuccessMessage("Les informations de la personne ont été bien enregistrées");
                         
                         //reinitialiser les champs
@@ -563,9 +574,9 @@ public class Controller {
                     showTablePers();
                 else {     
                     if (myView.getCheckboxMort_Pers().isSelected())
-                        myView.setTableDataPers(myModel.getAllPersByStatut("décédé"));
+                        myView.setTableDataPers(myModel.getAllPersByStatut("mort(e)"));
                     else if (myView.getCheckboxVivant_Pers().isSelected())
-                        myView.setTableDataPers(myModel.getAllPersByStatut("vivant"));
+                        myView.setTableDataPers(myModel.getAllPersByStatut("vivant(e)"));
                     else
                         myView.setTableDataPers(null);
                }
@@ -676,6 +687,12 @@ public class Controller {
         });
     }
 
+    public LocalDate convertirStringToLocalDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(dateStr, formatter);
+        return localDate;
+    }
+
     private void supprimerPay() {
         JButton supprimer = myView.getDelBut_Pay();
             supprimer.addActionListener(new ActionListener() {
@@ -685,7 +702,7 @@ public class Controller {
                 if (donnee!=null) {
                     if (myView.afficherQuestionOuiNon("Vous êtes sûre de vouloir supprimer ce paiement de la base de données?"))    
                         {
-                            myModel.deletePerson(donnee[0]);
+                            myModel.deletePayer(donnee[0],donnee[2],convertirStringToLocalDate(donnee[4]));
                             showTablePay();
                         }
                 }
@@ -744,7 +761,7 @@ public class Controller {
             histo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                myModel.showHistogram();
+                myModel.createHistogram(myModel.getAllAges());
             }
         });
     }
