@@ -24,6 +24,7 @@ public class View {
     private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
     private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
     private static secWin_newPers fenetreModale1 = new secWin_newPers(frame);
+    private static conjoint fenetreConjoint = new conjoint(frame);
 
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
@@ -89,6 +90,7 @@ public class View {
     private static JPanel buttonPanel_Pers;
     private static JButton modifyButton_Pers = new JButton("Modifier");
     private static JButton deleteButton_Pers = new JButton("Supprimer");
+    private static JButton ConjointButton_Pers = new JButton("Liste des conjoints(es)");
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
@@ -196,8 +198,8 @@ public class View {
             //tableau des boutons
             bouttons = new JButton[5];
 
-            // Création du bouton "Nouveau"
             JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
+            // Création du bouton "Nouveau"
             bouttons[0] = nouveauButton;
 
             // Ajout du bouton "Nouveau" au panel de gauche
@@ -610,12 +612,16 @@ private static JPanel createContentPanel3() {
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
+    ConjointButton_Pers.setFont(buttonFont_Pay_Pers);
     modifyButton_Pers.setForeground(buttonForeground_Pay_Pers);
     deleteButton_Pers.setForeground(buttonForeground_Pay_Pers);
+    ConjointButton_Pers.setForeground(buttonForeground_Pay_Pers);
     modifyButton_Pers.setBackground(buttonBackground_Pay_Pers);
     deleteButton_Pers.setBackground(buttonBackground_Pay_Pers);
+    ConjointButton_Pers.setBackground(buttonBackground_Pay_Pers);
     buttonPanel_Pers.add(modifyButton_Pers);
     buttonPanel_Pers.add(deleteButton_Pers);
+    buttonPanel_Pers.add(ConjointButton_Pers);
     gbc_Pers.gridy = 2;
     gbc_Pers.anchor = GridBagConstraints.EAST;
     contentPanel_Pers.add(buttonPanel_Pers, gbc_Pers);
@@ -1083,6 +1089,11 @@ public static JButton getDeleteButton_Pers() {
     return deleteButton_Pers;
 }
 
+//bouton liste des conjoints 
+public static JButton getconjointButton_Pers() {
+    return ConjointButton_Pers;
+}
+
 //tableau ao @personne : 
 public static JTable getTable_Pers() {
     return table_Pers;
@@ -1116,6 +1127,12 @@ public static secWin_newPay getWinPay(){
 public static secWin_newTar getWinTarif(){
     return fenetreModale3;
 }
+public static conjoint getWinConjoint(){
+    return fenetreConjoint;
+}
 
+private static JButton[] getBouttons() {
+        return bouttons;
+    }
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
