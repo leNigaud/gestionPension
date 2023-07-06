@@ -1132,7 +1132,7 @@ public static conjoint getWinConjoint(){
 }
 
 private static JButton[] getBouttons() {
-        return bouttons;
+        return bouttons; 
     }
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
