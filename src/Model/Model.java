@@ -989,4 +989,28 @@ public class Model {
         table.addCell(valueCell);
     }
 
+    //Display/Read all Conjoints
+    public List<Conjoint> getAllConjoints() {
+        List<Conjoint> allConjoints = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM conjoint";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String numPension = rs.getString("numPension"); 
+                String nomConjoint = rs.getString("nomConjoint");
+                String prenomConjoint = rs.getString("prenomConjoint");
+                int montant = rs.getInt("montant");
+            
+                Conjoint conjoint = new Conjoint(numPension, nomConjoint, prenomConjoint, montant); 
+                allConjoints.add(conjoint);                
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allConjoints;
+    }
+
 }
