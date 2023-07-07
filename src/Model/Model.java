@@ -605,7 +605,7 @@ public class Model {
 
     //Verify if a person is dead
     public boolean isDead(Personne personne) {
-        if(personne.getStatut() == "decede") return true;
+        if(personne.getStatut() == "mort(e)") return true;
         else return false;
     }
 

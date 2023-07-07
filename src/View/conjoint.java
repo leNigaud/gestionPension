@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import Data.*;
 import Model.*;
-import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 
 
@@ -57,6 +57,18 @@ public class conjoint extends JDialog {
     public static void showDialog(Frame parent) {
         conjoint dialog = new conjoint(parent);
         dialog.setVisible(true);
+    }
+
+    public static void addtab(Object[][] data){
+        // Supprimer toutes les lignes existantes du modèle de tableau
+        modelConj.setRowCount(0);
+
+        // Ajouter les nouvelles lignes au modèle de tableau
+        if (data!=null) {
+            for (Object[] rowData : data) {
+                modelConj.addRow(rowData);
+            }
+        }
     }
 }
 

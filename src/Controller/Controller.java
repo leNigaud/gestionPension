@@ -197,6 +197,22 @@ public class Controller {
         }
         return array;
     }
+
+        private  Object[][] convertConjointToArray2(List<Conjoint> listeConjoints) {
+        Object[][] array = new Object[listeConjoints.size()][];
+        for (int i = 0; i < listeConjoints.size(); i++) {
+            Conjoint conjoint = listeConjoints.get(i);
+            Object[] obj = {
+                conjoint.getNumPension(),
+                conjoint.getNomConjoint(),
+                conjoint.getPrenomConjoint(),
+                conjoint.getMontant()
+            };
+            array[i] = obj;
+        }
+        return array;
+    }
+    
     
     //authentifications
     private boolean areFieldsNotEmpty(JTextField[] fields) {
@@ -1013,6 +1029,26 @@ public class Controller {
 
     }
 
+    private void  updatetar (JTextField[] infoTar) {
+              int montant = Integer.parseInt(infoTar[3].getText());
+                                    Tarif tarifAjouter = new Tarif(
+                                         infoTar[0].getText(),
+                                         infoTar[1].getText(),
+                                         infoTar[2].getText(),
+                                         montant
+                                    );
+                                    myModel.updateTarif(tarifAjouter);
+                                    showSuccessMessage("Les informations du tarif ont bien été mises à jour");
+
+                                     //reinitialiser les champs
+                                    resetTextFields(infoTar);
+
+                                    //fermer la fenetre
+                                    myView.getWinTarifModif().dispose();
+                                    showTableTar();
+                                    System.out.println("Mise à jour du tarif réussi");
+    }
+
     private void modifierTarif() {
         JButton modifier = myView.getWinTarifModif().getAjouterButton();
             modifier.addActionListener(new ActionListener() {
@@ -1024,46 +1060,17 @@ public class Controller {
                 if(areFieldsNotEmpty(infoTar)) {
                     if (containsOnlyNumbers(infoTar[3]) && containsOnlyNumbers(infoTar[0])) { 
                         if (myModel.numTarifexiste(infoTar[0].getText())) {
-                            if (myView.afficherQuestionOuiNon("Le numéro de tarif existe déjà,vous êtes sûre de vouloir écraser les informations? ")) {
-                                 //conversion du montant en entier
-                                    int montant = Integer.parseInt(infoTar[3].getText());
-                                    Tarif tarifAjouter = new Tarif(
-                                         infoTar[0].getText(),
-                                         infoTar[1].getText(),
-                                         infoTar[2].getText(),
-                                         montant
-                                    );
-                                    myModel.updateTarif(tarifAjouter);
-                                    showSuccessMessage("Les informations du tarif ont bien été mises à jour");
-
-                                     //reinitialiser les champs
-                                    resetTextFields(infoTar);
-
-                                    //fermer la fenetre
-                                    myView.getWinTarifModif().dispose();
-                                    showTableTar();
-                                    System.out.println("Mise à jour du tarif réussi");
-                             
+                            if ( myView.afficherQuestionOuiNon("Le numéro de tarif existe déjà,vous êtes sûre de vouloir écraser les informations?") ) {
+                                updatetar(infoTar); System.out.println(" myView.afficherQuestionOuiNon");
                             }
-                        }  else {
-                                    //conversion du montant en entier
-                                    int montant = Integer.parseInt(infoTar[3].getText());
-                                    Tarif tarifAjouter = new Tarif(
-                                         infoTar[0].getText(),
-                                         infoTar[1].getText(),
-                                         infoTar[2].getText(),
-                                         montant
-                                    );
-                                    myModel.updateTarif(tarifAjouter);
-                                    showSuccessMessage("Les informations du tarif ont bien été mises à jour");
-
-                                     //reinitialiser les champs
-                                    resetTextFields(infoTar);
-
-                                    //fermer la fenetre
-                                    myView.getWinTarifModif().dispose();
-                                    showTableTar();
-                                    System.out.println("Mise à jour du tarif réussi");
+                              
+                                  
+                             
+                            
+                        }
+                        
+                        else {
+                            updatetar(infoTar);  System.out.println(" else");
                              
                         }
                                 
@@ -1114,7 +1121,17 @@ public class Controller {
             public void actionPerformed(ActionEvent e) {
                
                 List<Conjoint> conjoints = myModel.getAllConjoints();
-                myView.getWinConjoint().addConjointData(convertConjointToArray(conjoints));
+                Object[][] donnee = convertConjointToArray2(conjoints);
+                for (int i=0;i < donnee.length;i++) {
+                      for (int j=0;j < 4;j++)
+                      System.out.println("test"+donnee[i][j]);
+                }
+
+                for (Conjoint conjoint : conjoints) {
+                    System.out.println(conjoint.getNomConjoint());
+                }
+               ;
+                myView.getWinConjoint().addtab(convertConjointToArray2(conjoints));
                 myView.getWinConjoint().setVisible(true);
 
             }
