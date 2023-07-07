@@ -651,7 +651,7 @@ public class Controller {
                                 showSuccessMessage("Les informations du paiement ont \u00E9t\u00E9 bien enregistr\u00E9es");
 
                                 //reinitialiser les champs
-                                myView.getWinPers().resetValues();
+                                myView.getWinPay().resetValues();
 
                                 //fermer la fenetre
 
@@ -699,10 +699,10 @@ public class Controller {
                             showSuccessMessage("Les informations du tarif ont \u00E9t\u00E9 bien enregistr\u00E9es");
 
                              //reinitialiser les champs
-                            resetTextFields(infoTar);
+                         
 
                             //fermer la fenetre
-                            myView.getWinTarif().dispose();
+                            myView.getWinTarif().enleverfenetre();
                             showTableTar();
                             System.out.println("Ajout de tarif réussi");
                         }
@@ -944,14 +944,22 @@ public class Controller {
 
                 if(areFieldsNotEmpty(infoPay)) {
                     if (containsOnlyNumbers(infoPay[0]) && containsOnlyNumbers(infoPay[1])) {
+                        String[] donnee = myView.getSelectedRowData(myView.getTable_Pay());
                         LocalDate datePay = convertirEnLocalDateJava(date);
+
                 
                             Payer payAjouter = new Payer(
                                 infoPay[0].getText(),
                                 infoPay[1].getText(),
                                 datePay
                             );
-                            myModel.updatePayer(payAjouter);
+                            Payer payerancien = new Payer(
+                                donnee[0],
+                                donnee[2],
+                               convertirStringToLocalDate(donnee[4])
+                            );
+                            myModel.deletePayer(payerancien.getIM(), payerancien.getNum_tarif(), payerancien.getDate());
+                            myModel.addPayer(payAjouter);
                             showSuccessMessage("Les informations du paiement ont bien été mises à jour");
                             
                             //reinitialiser les champs

@@ -65,6 +65,7 @@ public class secWin_newTar extends JDialog {
             }
         });
 
+
         buttonPanel.add(ajouterButton);
         buttonPanel.add(annulerButton);
 
@@ -74,6 +75,12 @@ public class secWin_newTar extends JDialog {
         getContentPane().setBackground(Color.WHITE);
     }
     
+    public void enleverfenetre() {
+          for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
+                dispose();
+    }
 
 //zone de texte efatra no retourner-n'ty getter ray ty : num tarif , diplome , catégorie , montant
     public static JTextField[] getTextFields() {
