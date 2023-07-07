@@ -147,7 +147,7 @@ public class View {
         
         return rowData;
     }
-    
+
     return null; // Aucune ligne sélectionnée
 }
 
