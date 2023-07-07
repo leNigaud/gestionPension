@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 
+import Data.Conjoint;
 import Data.Payer;
 import Data.Personne;
 import Data.Tarif;
@@ -39,6 +40,7 @@ public class Controller {
         this.myModel=myModel;
         this.myView=myView;
         
+        rafraichir();
          
         ajouterPaiement();
         ajouterPersonne();
@@ -68,6 +70,8 @@ public class Controller {
         supprimerPay();
         supprimerPers();
         supprimerTarif();
+
+        gestionConjoint();
         
     }
     
@@ -180,6 +184,19 @@ public class Controller {
         return objects;
     }
 
+    private  Object[] convertConjointToArray(List<Conjoint> listeConjoints) {
+        Object[] array = new Object[listeConjoints.size()];
+        for (int i = 0; i < listeConjoints.size(); i++) {
+            Conjoint conjoint = listeConjoints.get(i);
+            Object[] obj = new Object[4];
+            obj[0] = conjoint.getNumPension();
+            obj[1] = conjoint.getNomConjoint();
+            obj[2] = conjoint.getPrenomConjoint();
+            obj[3] = conjoint.getMontant();
+            array[i] = obj;
+        }
+        return array;
+    }
     
     //authentifications
     private boolean areFieldsNotEmpty(JTextField[] fields) {
@@ -361,6 +378,37 @@ public class Controller {
          });
     }
 
+    private void rafraichir() {
+        JButton rafraichirPay=myView.getrefreshBut_Pay(),
+                rafraichirPers=myView.getRefreshButton_Pers(),
+                rafraichirTar=myView.getRefreshButton_Tarif();
+
+                rafraichirPay.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                       showTablePay();
+
+                       
+                    }
+                });
+                rafraichirPers.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                      showTablePers();
+                       
+                    }
+                });
+                rafraichirTar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        showTableTar();
+                       
+                    }
+                });
+
+
+    }
+
     private void afficherPay() {
         JButton nouveau = myView.getButton2_New(),
                 modifier = myView.getModifBut_Pay();
@@ -458,7 +506,7 @@ public class Controller {
 
                    
                   
-                    System.out.println(!contientChiffre(infoPers[1].toString()));
+                    
 
                    
                     for(int i=0;i<8;i++) {
@@ -500,21 +548,34 @@ public class Controller {
                                     break;
                                 }
                             }
-                            if (conjoint!="" && contientChiffre(conjoint)) {
-                                showErrorMessage("Le nom du conjoint ne doit pas contenir de chiffre");
-                                entree=false;
-                                break;
-                            }
-                            if (conjoint2!="" && contientChiffre(conjoint2)) {
-                                showErrorMessage("Le prénom du conjoint ne doit pas contenir de chiffre");
-                                entree=false;
-                                break;
-                            }
 
-                        }
+                            if (i==7) {
+                                if (infoPers[i].toString() == "marié(e)") {
+                                    if (conjoint.isEmpty()) {
+                                        showErrorMessage("Le nom du conjoint ne doit pas être vide");
+                                        entree=false;
+                                        break;
+                                    } else if (contientChiffre(conjoint)){
+                                         showErrorMessage("Le nom du conjoint ne doit pas contenir de chiffre");
+                                         entree=false;
+                                         break;
+                                    }
+                                    if (conjoint2.isEmpty()) {
+                                        showErrorMessage("Le prénom du conjoint ne doit pas être vide");
+                                        entree=false;
+                                        break;
+                                    } else if (contientChiffre(conjoint2)) {
+                                        showErrorMessage("Le prénom du conjoint ne doit pas contenir de chiffre");
+                                        entree=false;
+                                        break;
+                                    }
+
+                                 }
+
+                            }
+                        }   
+
                     }
-
-                    
                     
                     if (entree) {
                       
@@ -532,7 +593,8 @@ public class Controller {
                     }
             
             }
-       });
+    });
+     
     }
 
     //ajouter un paiement
@@ -695,101 +757,124 @@ public class Controller {
         JButton modifier = myView.getWinPersModif().getAjouterButton();
             modifier.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                Boolean entree=true;
-                Object[] infoPers = myView.getWinPersModif().getValeursSaisies();
-                JTextField[] champ = myView.getWinPersModif().getTextFields();
+                    public void actionPerformed(ActionEvent e) {
+                            Boolean entree=true;
+                            Object[] infoPers = myView.getWinPersModif().getValeursSaisies();
+                            JTextField[] champ = myView.getWinPersModif().getTextFields();
+                                    
+                            boolean conjointvide=true;
+                            String conjoint = "";
+                            String conjoint2 = "";
+                            // String contact = myView.getWinPers().getTextFields(3).getText();
                         
-               
-                String conjoint = "";
-                String conjoint2 = "";
-                // String contact = myView.getWinPers().getTextFields(3).getText();
-               
-                if (infoPers[8] != null && infoPers[9] != null) {
-                    conjoint = infoPers[8].toString();
-                    conjoint2 = infoPers[9].toString();
-                }
-                Personne personneAjouter = new Personne(
-                    infoPers[0].toString(),
-                    infoPers[1].toString(),
-                    infoPers[2].toString(),
-                    convertDateToLocalDate((Date) infoPers[3]),
-                    infoPers[4].toString(),
-                    infoPers[5].toString(),
-                    infoPers[6].toString(),
-                    infoPers[7].toString(),
-                    conjoint,
-                    conjoint2
-                );
+                            if (infoPers[8] != null && infoPers[9] != null) {
+                                conjoint = infoPers[8].toString();
+                                conjoint2 = infoPers[9].toString();
+                                
+                            }
+                            Personne personneAjouter = new Personne(
+                                infoPers[0].toString(),
+                                infoPers[1].toString(),
+                                infoPers[2].toString(),
+                                convertDateToLocalDate((Date) infoPers[3]),
+                                infoPers[4].toString(),
+                                infoPers[5].toString(),
+                                infoPers[6].toString(),
+                                infoPers[7].toString(),
+                                conjoint,
+                                conjoint2
+                            );
+                        
+                            // System.out.println(infoPers[7].toString()=="marié(e)");
+                            // System.out.println(conjoint.isEmpty());
                     
-            
-                    for(int i=0;i<8;i++) {
-                        if (infoPers[i].toString().isEmpty()) {
+                            for(int i=0;i<8;i++) {
+                                if (infoPers[i].toString().isEmpty()) {
+                                    
+                                    showErrorMessage("Vous avez mal rempli au moins un des champs");
+                                    entree=false;
+                                    break;
+                                } else {
+                                    if (i==0) {
+                                        if (!containsOnlyNumbers(infoPers[i].toString())) {
+                                            showErrorMessage("L'IM doit être un nombre");
+                                            entree=false;
+                                            break;
+                                        } else if (myModel.IMexiste(infoPers[i].toString())) {
+                                            if (!myView.afficherQuestionOuiNon("L'IM existe déjà,vous êtes sûre de vouloir écraser les informations? ")) {
+                                                    entree=false;
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                    if (i==1) {
+                                        if (contientChiffre(infoPers[i].toString())) {
+                                            showErrorMessage("Le nom ne doit pas contenir de chiffre");
+                                            entree=false;
+                                            break;
+                                        }
+                                    }
+                                    if (i==2) {
+                                        if (contientChiffre(infoPers[i].toString())) {
+                                            showErrorMessage("Le prénom ne doit pas contenir de chiffre");
+                                            entree=false;
+                                            break;
+                                        }
+                                    }
+                                    if (i==5) {
+                                        if (!containsContact(infoPers[i].toString())) {
+                                            showErrorMessage("Le contact n'est pas valide");
+                                            entree=false;
+                                            break;
+                                        }
+                                    }
+                                    if (i==7) {
+                                        if (infoPers[i].toString() == "marié(e)") {
+                                            if (conjoint.isEmpty()) {
+                                                showErrorMessage("Le nom du conjoint ne doit pas être vide");
+                                                entree=false;
+                                                break;
+                                            } else if (contientChiffre(conjoint)){
+                                                 showErrorMessage("Le nom du conjoint ne doit pas contenir de chiffre");
+                                                 entree=false;
+                                                 break;
+                                            }
+                                            if (conjoint2.isEmpty()) {
+                                                showErrorMessage("Le prénom du conjoint ne doit pas être vide");
+                                                entree=false;
+                                                break;
+                                            } else if (contientChiffre(conjoint2)) {
+                                                showErrorMessage("Le prénom du conjoint ne doit pas contenir de chiffre");
+                                                entree=false;
+                                                break;
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
                             
-                            showErrorMessage("Vous avez mal rempli au moins un des champs");
-                            entree=false;
-                            break;
-                        } else {
-                            if (i==0) {
-                                if (!containsOnlyNumbers(infoPers[i].toString())) {
-                                    showErrorMessage("L'IM doit être un nombre");
-                                    entree=false;
-                                    break;
-                                } 
                             }
-                            }
-                            if (i==1) {
-                                if (contientChiffre(infoPers[i].toString())) {
-                                    showErrorMessage("Le nom ne doit pas contenir de chiffre");
-                                    entree=false;
-                                    break;
-                                }
-                            }
-                            if (i==2) {
-                                if (contientChiffre(infoPers[i].toString())) {
-                                    showErrorMessage("Le prénom ne doit pas contenir de chiffre");
-                                    entree=false;
-                                    break;
-                                }
-                            }
-                            if (i==5) {
-                                if (!containsContact(infoPers[i].toString())) {
-                                    showErrorMessage("Le contact n'est pas valide");
-                                    entree=false;
-                                    break;
-                                }
-                            }
-                            if (conjoint!="" && contientChiffre(conjoint)) {
-                                showErrorMessage("Le nom du conjoint ne doit pas contenir de chiffre");
-                                entree=false;
-                                break;
-                            }
-                            if (conjoint2!="" && contientChiffre(conjoint2)) {
-                                showErrorMessage("Le prénom du conjoint ne doit pas contenir de chiffre");
-                                entree=false;
-                                break;
-                            }
+                            
+                            
+                            if (entree) {
+                            
+                                myModel.updatePerson(personneAjouter);
+                                showSuccessMessage("Les informations de la personne ont bien été mises à jour");
 
-                        }
-                    
-
-                    
-                    
-                    if (entree) {
-                      
-                        myModel.updatePerson(personneAjouter);
-                        showSuccessMessage("Les informations de la personne ont bien été mises à jour");
-
-                        //reinitialiser les champs et fermer les fenetres
-                        myView.getWinPersModif().resetValues();
-                        showTablePers();
-                        System.out.println("Mise à jour de la personne réussie");
-                    
-                    
-                    }
+                                //reinitialiser les champs et fermer les fenetres
+                                myView.getWinPersModif().resetValues();
+                                showTablePers();
+                                System.out.println("Mise à jour de la personne réussie");
+                            
+                            
+                            }
             
-            }
-        });
+                    }
+                    
+            });
+              
     }
 
     private void supprimerPers() {
@@ -937,29 +1022,56 @@ public class Controller {
           
                 
                 if(areFieldsNotEmpty(infoTar)) {
-                    if (containsOnlyNumbers(infoTar[3])) {
-                        //conversion du montant en entier
-                        int montant = Integer.parseInt(infoTar[3].getText());
-                        Tarif tarifAjouter = new Tarif(
-                             infoTar[0].getText(),
-                             infoTar[1].getText(),
-                             infoTar[2].getText(),
-                             montant
-                        );
-                        myModel.updateTarif(tarifAjouter);
-                        showSuccessMessage("Les informations du tarif ont bien été mises à jour");
+                    if (containsOnlyNumbers(infoTar[3]) && containsOnlyNumbers(infoTar[0])) { 
+                        if (myModel.numTarifexiste(infoTar[0].getText())) {
+                            if (myView.afficherQuestionOuiNon("Le numéro de tarif existe déjà,vous êtes sûre de vouloir écraser les informations? ")) {
+                                 //conversion du montant en entier
+                                    int montant = Integer.parseInt(infoTar[3].getText());
+                                    Tarif tarifAjouter = new Tarif(
+                                         infoTar[0].getText(),
+                                         infoTar[1].getText(),
+                                         infoTar[2].getText(),
+                                         montant
+                                    );
+                                    myModel.updateTarif(tarifAjouter);
+                                    showSuccessMessage("Les informations du tarif ont bien été mises à jour");
 
-                         //reinitialiser les champs
-                        resetTextFields(infoTar);
+                                     //reinitialiser les champs
+                                    resetTextFields(infoTar);
 
-                        //fermer la fenetre
-                        myView.getWinTarifModif().dispose();
-                        showTableTar();
-                        System.out.println("Mise à jour du tarif réussi");
+                                    //fermer la fenetre
+                                    myView.getWinTarifModif().dispose();
+                                    showTableTar();
+                                    System.out.println("Mise à jour du tarif réussi");
+                             
+                            }
+                        }  else {
+                                    //conversion du montant en entier
+                                    int montant = Integer.parseInt(infoTar[3].getText());
+                                    Tarif tarifAjouter = new Tarif(
+                                         infoTar[0].getText(),
+                                         infoTar[1].getText(),
+                                         infoTar[2].getText(),
+                                         montant
+                                    );
+                                    myModel.updateTarif(tarifAjouter);
+                                    showSuccessMessage("Les informations du tarif ont bien été mises à jour");
+
+                                     //reinitialiser les champs
+                                    resetTextFields(infoTar);
+
+                                    //fermer la fenetre
+                                    myView.getWinTarifModif().dispose();
+                                    showTableTar();
+                                    System.out.println("Mise à jour du tarif réussi");
+                             
+                        }
+                                
+                        
+                        
                     } else
-                        showErrorMessage("Vos devez saisir un nombre sur le champ \"montant\"");
-                
-                }   else
+                        showErrorMessage("Vos devez saisir un nombre sur les champs  \"numéro de tarif\" et \"montant\"");
+                }  else
                          showErrorMessage("Vous avez mal rempli au moins un des champs");
             }
         });
@@ -993,5 +1105,21 @@ public class Controller {
         });
     }
 
+
+    //conjoint
+    private void gestionConjoint() {
+        JButton boutonconjoint = myView.getconjointButton_Pers();
+            boutonconjoint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               
+                List<Conjoint> conjoints = myModel.getAllConjoints();
+                myView.getWinConjoint().addConjointData(convertConjointToArray(conjoints));
+                myView.getWinConjoint().setVisible(true);
+
+            }
+        });
+
+    }
     
 }

@@ -227,21 +227,25 @@ public static Date convertLocalDateToDate(Object loc) {
     Object[] valeurs = new Object[10];
 
     // Récupérer les valeurs des JTextField
-    for (int i = 0; i < textFields.length; i++) {
+    int i = 0;
+    for (; i < 3; i++) {
         valeurs[i] = textFields[i].getText();
     }
 
     // Récupérer la valeur sélectionnée dans le JSpinner (Date de naissance)
     valeurs[3] = DateSpinner_Pers.getValue();
-
+    
+    valeurs[4] = listeDeroulante3.getSelectedItem();
+    valeurs[5] =  textFields[i++].getText();
     // Récupérer la valeur sélectionnée dans la liste déroulante 1 (Statut)
     valeurs[6] = listeDeroulante1.getSelectedItem();
 
     // Récupérer la valeur sélectionnée dans la liste déroulante 2 (Situation)
     valeurs[7] = listeDeroulante2.getSelectedItem();
+    valeurs[8] =  textFields[i++].getText();
+    valeurs[9] =  textFields[i].getText();
 
     // Récupérer la valeur sélectionnée dans la liste déroulante 3 (Diplôme)
-    valeurs[4] = listeDeroulante3.getSelectedItem();
 
     return valeurs;
 }

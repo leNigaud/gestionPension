@@ -33,6 +33,8 @@ public class View {
     private static secWin_newPers fenetreModale1 = new secWin_newPers(frame,"Ajouter","Ajouter une nouvelle personne");
     
 
+    private static conjoint fenetreConjoint = new conjoint(frame);
+
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
     private static JPanel contentPanel1_New;
@@ -67,6 +69,7 @@ public class View {
     private static JButton modifBut_Pay = new JButton("Modifier");
     private static JButton delBut_Pay = new JButton("Supprimer");
     private static JButton recu_Pay = new JButton("Générer un reçu");
+    private static JButton refresh_Pay = new JButton("Rafraichir");
     private static JLabel label_Pay;
     private static JLabel label1_Pay;
     private static JLabel label2_Pay;
@@ -97,6 +100,8 @@ public class View {
     private static JPanel buttonPanel_Pers;
     private static JButton modifyButton_Pers = new JButton("Modifier");
     private static JButton deleteButton_Pers = new JButton("Supprimer");
+    private static JButton ConjointButton_Pers = new JButton("Liste des conjoints(es)");
+    private static JButton refreshButton_Pers = new JButton("rafraichir");
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
@@ -109,6 +114,7 @@ public class View {
     private static JLabel label_Tarif;
     private static JButton modifierButton_Tarif = new JButton("Modifier");
     private static JButton supprimerButton_Tarif = new JButton("Supprimer");
+    private static JButton refreshButton_Tarif = new JButton("Rafraichir");
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
     private static DefaultTableModel modelTarif = new DefaultTableModel();
@@ -118,7 +124,8 @@ public class View {
     private static JPanel buttonPanel_Tarif;
 
 
-    private static JButton[] bouttons; // Déclaration du tableau bouttons en tant que variable de classe
+    private static JButton[] bouttons = new JButton[5]; // Déclaration du tableau bouttons en tant que variable de classe
+    private static JButton[] bouttons5 = new JButton[5]; // Déclaration du tableau bouttons en tant que variable de classe
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
@@ -204,8 +211,8 @@ public class View {
             //tableau des boutons
             bouttons = new JButton[5];
 
-            // Création du bouton "Nouveau"
             JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
+            // Création du bouton "Nouveau"
             bouttons[0] = nouveauButton;
 
             // Ajout du bouton "Nouveau" au panel de gauche
@@ -235,7 +242,7 @@ public class View {
             // Création du bouton "Histogramme"
             histogrammeButton = createStyledButton("Histogramme", panelWidth, 57);
             bouttons[4] = histogrammeButton;
-
+            bouttons5 = bouttons;
             // Ajout du bouton "Histogramme" au panel de gauche
             leftPanel.add(histogrammeButton);
 
@@ -468,6 +475,9 @@ public class View {
     recu_Pay.setFont(buttonFont_Pay);
     recu_Pay.setForeground(buttonForeground_Pay);
     recu_Pay.setBackground(buttonBackground_Pay);
+    refresh_Pay.setFont(buttonFont_Pay);
+    refresh_Pay.setForeground(buttonForeground_Pay);
+    refresh_Pay.setBackground(buttonBackground_Pay);
 
     label_Pay = new JLabel("Payement");
     label1_Pay = new JLabel("         ");
@@ -496,6 +506,7 @@ public class View {
     topPanel_Pay.add(modifBut_Pay);
     topPanel_Pay.add(delBut_Pay);
     topPanel_Pay.add(recu_Pay);
+    topPanel_Pay.add(refresh_Pay);
     topPanel_Pay.add(label1_Pay);
     topPanel_Pay.add(label2_Pay);
 
@@ -618,12 +629,20 @@ private static JPanel createContentPanel3() {
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
+    ConjointButton_Pers.setFont(buttonFont_Pay_Pers);
+    refreshButton_Pers.setFont(buttonFont_Pay_Pers);
     modifyButton_Pers.setForeground(buttonForeground_Pay_Pers);
     deleteButton_Pers.setForeground(buttonForeground_Pay_Pers);
+    ConjointButton_Pers.setForeground(buttonForeground_Pay_Pers);
+    refreshButton_Pers.setForeground(buttonForeground_Pay_Pers);
     modifyButton_Pers.setBackground(buttonBackground_Pay_Pers);
     deleteButton_Pers.setBackground(buttonBackground_Pay_Pers);
+    ConjointButton_Pers.setBackground(buttonBackground_Pay_Pers);
+    refreshButton_Pers.setBackground(buttonBackground_Pay_Pers);
     buttonPanel_Pers.add(modifyButton_Pers);
     buttonPanel_Pers.add(deleteButton_Pers);
+    buttonPanel_Pers.add(ConjointButton_Pers);
+    buttonPanel_Pers.add(refreshButton_Pers);
     gbc_Pers.gridy = 2;
     gbc_Pers.anchor = GridBagConstraints.EAST;
     contentPanel_Pers.add(buttonPanel_Pers, gbc_Pers);
@@ -684,6 +703,10 @@ private static JPanel createContentPanel4() {
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
 
+    refreshButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
+    refreshButton_Tarif.setForeground(Color.WHITE);
+    refreshButton_Tarif.setBackground(new Color(176, 224, 230));
+
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
     tableHeader_Tarif.setBackground(new Color(176, 224, 230));
@@ -709,6 +732,7 @@ private static JPanel createContentPanel4() {
     buttonPanel_Tarif.setLayout(new FlowLayout(FlowLayout.LEFT));
     buttonPanel_Tarif.add(modifierButton_Tarif);
     buttonPanel_Tarif.add(supprimerButton_Tarif);
+    buttonPanel_Tarif.add(refreshButton_Tarif);
     topPanel_Tarif.add(buttonPanel_Tarif, BorderLayout.SOUTH);
 
     panel_Tarif.add(topPanel_Tarif, BorderLayout.NORTH);
@@ -1054,6 +1078,11 @@ public static JButton getfilterPay() {
 public static JButton getDelBut_Pay() {
     return delBut_Pay;
 }
+
+//bouton rafraichir
+public static JButton getrefreshBut_Pay() {
+    return refresh_Pay;
+}
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
 public static boolean afficherQuestionOuiNon(String phrase) {
     int choix = JOptionPane.showOptionDialog(null,phrase, "Avertissement", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -1101,6 +1130,15 @@ public static JButton getFilterButton_Pers() {
 public static JButton getDeleteButton_Pers() {
     return deleteButton_Pers;
 }
+//bouton rafraichir
+public static JButton getRefreshButton_Pers() {
+    return refreshButton_Pers;
+}
+
+//bouton liste des conjoints 
+public static JButton getconjointButton_Pers() {
+    return ConjointButton_Pers;
+}
 
 //tableau ao @personne : 
 public static JTable getTable_Pers() {
@@ -1112,6 +1150,10 @@ public static JTable getTable_Pers() {
 //bouton supprimer 
 public static JButton getSupprimerButton_Tarif() {
     return supprimerButton_Tarif;
+}
+//bouton raffraichir
+public static JButton getRefreshButton_Tarif() {
+    return refreshButton_Tarif;
 }
 
 //tableau tarif
@@ -1144,8 +1186,15 @@ public static modifpay getWinPayModif(){
 }
 public static modiftar getWinTarifModif(){
     return fenetreModifTar;
+
+}
+public static conjoint getWinConjoint(){
+    return fenetreConjoint;
 }
 
+public static JButton[] getBouttons() {
+        return bouttons5; 
+    }
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
 
