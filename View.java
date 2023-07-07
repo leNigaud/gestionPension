@@ -1,5 +1,3 @@
-package View;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,26 +12,19 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import Data.*;
 import Model.*;
-
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+//date ; zone de texte ; checkbox; tableau
 
 public class View {
 
     //declaration anle frame
     public static JFrame frame;
-    public static String[] rowNow = new String[10];
+    public static String[] rowNow;
     
-    private static modifpay fenetreModifPay = new modifpay(frame,"Modifier","Modifier un paiement");
-    private static modiftar fenetreModifTar = new modiftar(frame,"Modifier","Modifier un tarif"); 
-    private static modifpers fenetreModifPers = new modifpers(frame,"Modifier","Modifier les informations d'une personne");
-
-    
-    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame,"Ajouter","Ajouter un nouveau paiement");
-    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame,"Ajouter","Ajouter un nouveau tarif"); 
-    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame,"Ajouter","Ajouter une nouvelle personne");
-    
-
-    private static conjoint fenetreConjoint = new conjoint(frame);
+    private static secWin_newPay fenetreModale2 = new secWin_newPay(frame);
+    private static secWin_newTar fenetreModale3 = new secWin_newTar(frame); 
+    private static secWin_newPers fenetreModale1 = new secWin_newPers(frame);
 
     //variable miasa ao @methode mampiditra contenu an'ny Nouveau
     private static JPanel contentPanel_New;
@@ -68,8 +59,7 @@ public class View {
     private static JButton filterPay = new JButton("Filtrer");
     private static JButton modifBut_Pay = new JButton("Modifier");
     private static JButton delBut_Pay = new JButton("Supprimer");
-    private static JButton recu_Pay = new JButton("Générer un reçu");
-    private static JButton refresh_Pay = new JButton("Rafraichir");
+    private static JButton recu_Pay = new JButton("Genrer un reçu");
     private static JLabel label_Pay;
     private static JLabel label1_Pay;
     private static JLabel label2_Pay;
@@ -78,7 +68,6 @@ public class View {
     private static JPanel labelPanel_Pay;
     private static String[] columnNames_Pay;
     private static Object[][] data_Pay;
-    private static DefaultTableModel modelPay = new DefaultTableModel();
     private static JTable table_Pay;
     private static JTableHeader header_Pay;
     private static JPanel tablePanel_Pay;
@@ -100,12 +89,9 @@ public class View {
     private static JPanel buttonPanel_Pers;
     private static JButton modifyButton_Pers = new JButton("Modifier");
     private static JButton deleteButton_Pers = new JButton("Supprimer");
-    private static JButton ConjointButton_Pers = new JButton("Liste des conjoints(es)");
-    private static JButton refreshButton_Pers = new JButton("rafraichir");
     private static JPanel tablePanel_Pers;
     private static String[] columnNames_Pers;
     private static Object[][] data_Pers;
-    private static DefaultTableModel modelPers = new DefaultTableModel();
     private static JTable table_Pers;
     private static JTableHeader header_Pers;
 
@@ -114,23 +100,19 @@ public class View {
     private static JLabel label_Tarif;
     private static JButton modifierButton_Tarif = new JButton("Modifier");
     private static JButton supprimerButton_Tarif = new JButton("Supprimer");
-    private static JButton refreshButton_Tarif = new JButton("Rafraichir");
     private static String[] columnNames_Tarif;
     private static Object[][] data_Tarif;
-    private static DefaultTableModel modelTarif = new DefaultTableModel();
     private static JTable table_Tarif;
     private static JTableHeader tableHeader_Tarif;
     private static JPanel topPanel_Tarif;
     private static JPanel buttonPanel_Tarif;
 
 
-    private static JButton[] bouttons = new JButton[5]; // Déclaration du tableau bouttons en tant que variable de classe
-    private static JButton[] bouttons5 = new JButton[5]; // Déclaration du tableau bouttons en tant que variable de classe
+    private static JButton[] bouttons; // Déclaration du tableau bouttons en tant que variable de classe
     private static JPanel[] childPanels; // Déclaration du tableau childPanels en tant que variable de classe
     private static JPanel rightPanel; // Déclaration du JPanel rightPanel en tant que variable de classe
     private static JPanel leftPanel;
-    private static JButton histogrammeButton = new JButton("Histogramme") ;
-    private static Object[] objet_pay = new Object[3];
+    private static JButton histogrammeButton  = new JButton("Histogramme") ;
 
     public static String[] getSelectedRowData(JTable table) {
     int selectedRow = table.getSelectedRow();
@@ -147,13 +129,12 @@ public class View {
         
         return rowData;
     }
-
+    
     return null; // Aucune ligne sélectionnée
 }
 
 
     public View() {
-        this.initializeTables();
         SwingUtilities.invokeLater(() -> {
             // Création de la fenêtre
             frame = new JFrame("Pension Manager");
@@ -211,8 +192,8 @@ public class View {
             //tableau des boutons
             bouttons = new JButton[5];
 
-            JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
             // Création du bouton "Nouveau"
+            JButton nouveauButton = createStyledButton("Nouveau", panelWidth, 57);
             bouttons[0] = nouveauButton;
 
             // Ajout du bouton "Nouveau" au panel de gauche
@@ -242,7 +223,7 @@ public class View {
             // Création du bouton "Histogramme"
             histogrammeButton = createStyledButton("Histogramme", panelWidth, 57);
             bouttons[4] = histogrammeButton;
-            bouttons5 = bouttons;
+
             // Ajout du bouton "Histogramme" au panel de gauche
             leftPanel.add(histogrammeButton);
 
@@ -378,6 +359,27 @@ public class View {
     contentPanel2_New.add(label_New);
     contentPanel1_New.add(contentPanel2_New);
 
+    
+    button1_New.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                fenetreModale1.setVisible(true);
+            }
+        });
+    
+    button2_New.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                fenetreModale2.setVisible(true);
+            }
+        });
+    //secWin_newTar
+    button3_New.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                fenetreModale3.setVisible(true);
+            }
+        });
     button1_New.setPreferredSize(new Dimension(180, 157));
     button2_New.setPreferredSize(new Dimension(180, 157));
     button3_New.setPreferredSize(new Dimension(180, 157));
@@ -458,6 +460,29 @@ public class View {
     endDateSpinner_Pay.setForeground(dateForeground_Pay);
     endDateSpinner_Pay.setBackground(dateBackground_Pay);
     endDateSpinner_Pay.setBorder(dateBorder_Pay);
+
+    modifBut_Pay.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        // Vérifier si une ligne est sélectionnée
+        int selectedRow = table_Pay.getSelectedRow();
+        if (selectedRow != -1) {
+            // Récupérer les données de la ligne sélectionnée
+            TableModel model = table_Pay.getModel();
+            int columnCount = model.getColumnCount();
+            String[] rowData = new String[columnCount];
+
+            for (int i = 0; i < columnCount; i++) {
+                rowData[i] = model.getValueAt(selectedRow, i).toString();
+            }
+
+            // Utiliser le tableau de données (rowData) comme vous le souhaitez
+            // ...
+            rowNow = rowData;
+            fenetreModale2 = new secWin_newPay(frame);
+            fenetreModale2.setVisible(true);
+        }
+            }
+        });
     
 
     Font buttonFont_Pay = new Font("Bookman Old Style", Font.PLAIN, 20);
@@ -475,9 +500,6 @@ public class View {
     recu_Pay.setFont(buttonFont_Pay);
     recu_Pay.setForeground(buttonForeground_Pay);
     recu_Pay.setBackground(buttonBackground_Pay);
-    refresh_Pay.setFont(buttonFont_Pay);
-    refresh_Pay.setForeground(buttonForeground_Pay);
-    refresh_Pay.setBackground(buttonBackground_Pay);
 
     label_Pay = new JLabel("Payement");
     label1_Pay = new JLabel("         ");
@@ -506,12 +528,18 @@ public class View {
     topPanel_Pay.add(modifBut_Pay);
     topPanel_Pay.add(delBut_Pay);
     topPanel_Pay.add(recu_Pay);
-    topPanel_Pay.add(refresh_Pay);
     topPanel_Pay.add(label1_Pay);
     topPanel_Pay.add(label2_Pay);
 
     contentPanel_Pay.add(labelPanel_Pay);
     contentPanel_Pay.add(topPanel_Pay);
+
+    columnNames_Pay = new String[]{"IM", "Nom", "Numero de Tarif", "Montant", "Date de Paiement"};
+    data_Pay = new Object[][]{
+        //{"1", "1", "1", "1","1"},
+        //{"54", "2", "28", "265","266"}
+    };
+    table_Pay = new JTable(data_Pay, columnNames_Pay);
 
     header_Pay = table_Pay.getTableHeader();
     header_Pay.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -626,29 +654,52 @@ private static JPanel createContentPanel3() {
                     super.paintComponent(g);
                     setBackground(Color.WHITE);
                 }};
+    modifyButton_Pers.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        // Vérifier si une ligne est sélectionnée
+        int selectedRow = table_Pers.getSelectedRow();
+        if (selectedRow != -1) {
+            // Récupérer les données de la ligne sélectionnée
+            TableModel model = table_Pers.getModel();
+            int columnCount = model.getColumnCount();
+            String[] rowData = new String[columnCount];
+
+            for (int i = 0; i < columnCount; i++) {
+                rowData[i] = model.getValueAt(selectedRow, i).toString();
+            }
+
+            // Utiliser le tableau de données (rowData) comme vous le souhaitez
+            // ...
+            rowNow = rowData;
+            fenetreModale1 = new secWin_newPers(frame);
+            fenetreModale1.setVisible(true);
+        }
+                
+            }
+        });
     
     modifyButton_Pers.setFont(buttonFont_Pay_Pers);
     deleteButton_Pers.setFont(buttonFont_Pay_Pers);
-    ConjointButton_Pers.setFont(buttonFont_Pay_Pers);
-    refreshButton_Pers.setFont(buttonFont_Pay_Pers);
     modifyButton_Pers.setForeground(buttonForeground_Pay_Pers);
     deleteButton_Pers.setForeground(buttonForeground_Pay_Pers);
-    ConjointButton_Pers.setForeground(buttonForeground_Pay_Pers);
-    refreshButton_Pers.setForeground(buttonForeground_Pay_Pers);
     modifyButton_Pers.setBackground(buttonBackground_Pay_Pers);
     deleteButton_Pers.setBackground(buttonBackground_Pay_Pers);
-    ConjointButton_Pers.setBackground(buttonBackground_Pay_Pers);
-    refreshButton_Pers.setBackground(buttonBackground_Pay_Pers);
     buttonPanel_Pers.add(modifyButton_Pers);
     buttonPanel_Pers.add(deleteButton_Pers);
-    buttonPanel_Pers.add(ConjointButton_Pers);
-    buttonPanel_Pers.add(refreshButton_Pers);
     gbc_Pers.gridy = 2;
     gbc_Pers.anchor = GridBagConstraints.EAST;
     contentPanel_Pers.add(buttonPanel_Pers, gbc_Pers);
 
     // Ajout du panel de la table
     tablePanel_Pers = new JPanel(new BorderLayout());
+    columnNames_Pers = new String[]{"IM","NOM","PRENOMS","Date de naissance","Diplôme","Contact","Statut","Situation","Nom de Conjoint(e)","Prenom de conjoint(e)"};
+    data_Pers = new Object[][]{
+        //{"im","nom","pnom","22/12/1995","dipom","contact","stats","situ","conj","Pconj"},
+        //{"","","","","","","","","",""},
+        //{"","","","","","","","","",""},
+        //{"","","","","","","","","",""} 
+    };
+    table_Pers = new JTable(data_Pers, columnNames_Pers);
 
     header_Pers = table_Pers.getTableHeader();
     header_Pers.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -693,7 +744,29 @@ private static JPanel createContentPanel4() {
     label_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 30));
     label_Tarif.setForeground(new Color(176, 224, 230));
 
-        
+    modifierButton_Tarif.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        // Vérifier si une ligne est sélectionnée
+        int selectedRow = table_Tarif.getSelectedRow();
+        if (selectedRow != -1) {
+            // Récupérer les données de la ligne sélectionnée
+            TableModel model = table_Tarif.getModel();
+            int columnCount = model.getColumnCount();
+            String[] rowData = new String[columnCount];
+
+            for (int i = 0; i < columnCount; i++) {
+                rowData[i] = model.getValueAt(selectedRow, i).toString();
+            }
+
+            // Utiliser le tableau de données (rowData) comme vous le souhaitez
+            // ...
+            rowNow = rowData;
+            fenetreModale3 = new secWin_newTar(frame);
+            fenetreModale3.setVisible(true);
+        }
+                
+            }
+        });
     modifierButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
     modifierButton_Tarif.setForeground(Color.WHITE);
     modifierButton_Tarif.setBackground(new Color(176, 224, 230));
@@ -703,9 +776,25 @@ private static JPanel createContentPanel4() {
     supprimerButton_Tarif.setForeground(Color.WHITE);
     supprimerButton_Tarif.setBackground(new Color(176, 224, 230));
 
-    refreshButton_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 20));
-    refreshButton_Tarif.setForeground(Color.WHITE);
-    refreshButton_Tarif.setBackground(new Color(176, 224, 230));
+    columnNames_Tarif = new String[]{"Numuro de Tarif", "Diplôme", "Catégorie", "Montant"};
+    data_Tarif = new Object[][]{
+         //{"Donnée 1-1", "Donnée 1-2", "Donnée 1-3", "Donnée 1-4"},
+          //{"Donnée 2-1", "Donnée 2-2", "Donnée 2-3", "Donnée 2-4"},
+          //{"Donnée 3-1", "Donnée 3-2", "Donnée 3-3", "Donnée 3-4"} 
+    };
+    table_Tarif = new JTable(data_Tarif, columnNames_Tarif);
+    table_Tarif.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            String[] rowData = getSelectedRowData(table_Tarif);
+            
+            if (rowData != null) {
+                rowNow = rowData;
+            }
+        }
+    }
+});
 
     tableHeader_Tarif = table_Tarif.getTableHeader();
     tableHeader_Tarif.setFont(new Font("Bookman Old Style", Font.PLAIN, 12));
@@ -732,7 +821,6 @@ private static JPanel createContentPanel4() {
     buttonPanel_Tarif.setLayout(new FlowLayout(FlowLayout.LEFT));
     buttonPanel_Tarif.add(modifierButton_Tarif);
     buttonPanel_Tarif.add(supprimerButton_Tarif);
-    buttonPanel_Tarif.add(refreshButton_Tarif);
     topPanel_Tarif.add(buttonPanel_Tarif, BorderLayout.SOUTH);
 
     panel_Tarif.add(topPanel_Tarif, BorderLayout.NORTH);
@@ -740,81 +828,6 @@ private static JPanel createContentPanel4() {
 
     return panel_Tarif;
 }
-
-//initialisation des tableaux
-public static void initializeTables() {
-        // Initialiser le tableau table_Pers
-        
-        modelPers.addColumn("IM");
-        modelPers.addColumn("NOM");
-        modelPers.addColumn("PRENOMS");
-        modelPers.addColumn("Date de naissance");
-        modelPers.addColumn("Diplôme");
-        modelPers.addColumn("Contact");
-        modelPers.addColumn("Statut");
-        modelPers.addColumn("Situation");
-        modelPers.addColumn("Nom de Conjoint(e)");
-        modelPers.addColumn("Prenom de conjoint(e)");
-        table_Pers = new JTable(modelPers);
-
-        // Initialiser le tableau table_Pay
-        
-        modelPay.addColumn("IM");
-        modelPay.addColumn("Nom");
-        modelPay.addColumn("Numero de Tarif");
-        modelPay.addColumn("Montant");
-        modelPay.addColumn("Date de Paiement");
-        table_Pay = new JTable(modelPay);
-
-        // Initialiser le tableau table_Tarif
-        
-        modelTarif.addColumn("Numuro de Tarif");
-        modelTarif.addColumn("Diplôme");
-        modelTarif.addColumn("Catégorie");
-        modelTarif.addColumn("Montant");
-        table_Tarif = new JTable(modelTarif);
-    }
-//contenu des tables
-public static void setTableDataPers(Object[][] data) {
-     // Supprimer toutes les lignes existantes du modèle de tableau
-        modelPers.setRowCount(0);
-
-        // Ajouter les nouvelles lignes au modèle de tableau
-        if (data!=null) {
-            for (Object[] rowData : data) {
-                modelPers.addRow(rowData);
-            }
-        }
-    }
-
-
-    public static void setTableDataPay(Object[][] data) {
-        modelPay.setRowCount(0); // Supprimer toutes les lignes existantes
-
-        for (Object[] rowData : data) {
-            modelPay.addRow(rowData);
-        }
-    }
-
-    public void setTableDataTarif(Object[][] data) {
-        // Supprimer toutes les lignes existantes du modèle de tableau
-        modelTarif.setRowCount(0);
-
-        // Ajouter les nouvelles lignes au modèle de tableau
-        for (Object[] rowData : data) {
-            modelTarif.addRow(rowData);
-        }
-    }
-
-    //m-afficher message
-    public static void showDangerDialog(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
-    }
-
-    public static void showInfoDialog(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
-    }
-
 
 
 //methode manao update anle table hita maso eo .. afaka modifier-na raha tsy mety
@@ -851,15 +864,15 @@ public static JLabel getLabel_New() {
     return label_New;
 }
 
-public static JButton getButton1_New() {//nouvelle personne
+public static JButton getButton1_New() {
     return button1_New;
 }
 
-public static JButton getButton2_New() {//nouveau paiement
+public static JButton getButton2_New() {
     return button2_New;
 }
 
-public static JButton getButton3_New() {//nouveau tarif
+public static JButton getButton3_New() {
     return button3_New;
 }
 
@@ -1054,11 +1067,6 @@ public static JPanel getButtonPanel_Tarif() {
 }
 //#menu paiement
 
-//objet pay
-public static void setobject_pay(Object[] obj){
-    objet_pay = obj;
-}
-
 //date de debut (le saisi de date eo @gauche)
 public static JSpinner getStartDateSpinner_Pay() {
     return startDateSpinner_Pay;
@@ -1078,14 +1086,9 @@ public static JButton getfilterPay() {
 public static JButton getDelBut_Pay() {
     return delBut_Pay;
 }
-
-//bouton rafraichir
-public static JButton getrefreshBut_Pay() {
-    return refresh_Pay;
-}
 //messagebox manontany confirmation de la suppression , ampiasaina @le suppression
-public static boolean afficherQuestionOuiNon(String phrase) {
-    int choix = JOptionPane.showOptionDialog(null,phrase, "Avertissement", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+public static boolean afficherQuestionOuiNon() {
+    int choix = JOptionPane.showOptionDialog(null,"phrase", "Suppression", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
     return choix == JOptionPane.YES_OPTION;
 }
 
@@ -1130,15 +1133,6 @@ public static JButton getFilterButton_Pers() {
 public static JButton getDeleteButton_Pers() {
     return deleteButton_Pers;
 }
-//bouton rafraichir
-public static JButton getRefreshButton_Pers() {
-    return refreshButton_Pers;
-}
-
-//bouton liste des conjoints 
-public static JButton getconjointButton_Pers() {
-    return ConjointButton_Pers;
-}
 
 //tableau ao @personne : 
 public static JTable getTable_Pers() {
@@ -1151,10 +1145,6 @@ public static JTable getTable_Pers() {
 public static JButton getSupprimerButton_Tarif() {
     return supprimerButton_Tarif;
 }
-//bouton raffraichir
-public static JButton getRefreshButton_Tarif() {
-    return refreshButton_Tarif;
-}
 
 //tableau tarif
 public static JTable getTable_Tarif() {
@@ -1163,8 +1153,8 @@ public static JTable getTable_Tarif() {
 
 
 //#bouton histogramme
-public static JButton gethistogrammeButton() {
-    return histogrammeButton;
+public static JButton getHistoG(){
+    return histogrammeButton ;
 }
 
 //getters anle instance anle fenetre modals
@@ -1177,24 +1167,6 @@ public static secWin_newPay getWinPay(){
 public static secWin_newTar getWinTarif(){
     return fenetreModale3;
 }
-//getters anle instance anle fenetre modals
-public static modifpers getWinPersModif(){
-    return fenetreModifPers;
-}
-public static modifpay getWinPayModif(){
-    return fenetreModifPay;
-}
-public static modiftar getWinTarifModif(){
-    return fenetreModifTar;
 
-}
-public static conjoint getWinConjoint(){
-    return fenetreConjoint;
-}
-
-public static JButton[] getBouttons() {
-        return bouttons5; 
-    }
 //ireo ambony ireo lay getters anle fenetre modale fa adinoko teo ; any anatin'ny classe fenetre secondaire 1/1 no misy ireo methode getter propre ho an'ny fenetre secondaire tsirairay
 }
-
