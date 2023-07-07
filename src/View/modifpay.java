@@ -79,14 +79,14 @@ public class modifpay extends JDialog {
         annulerButton.setFont(annulerButton.getFont().deriveFont(15f));
         annulerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (JTextField zonet : textFields) {
-                zonet.setText("");
-                }
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new java.util.Date());
-                Date currentDate = calendar.getTime();
-                DateSpinner_Pay.setValue(currentDate);
-                dispose();
+                // for (JTextField zonet : textFields) {
+                // zonet.setText("");
+                // }
+                // Calendar calendar = Calendar.getInstance();
+                // calendar.setTime(new java.util.Date());
+                // Date currentDate = calendar.getTime();
+                // DateSpinner_Pay.setValue(currentDate);
+                // dispose();
             }
         });
 
@@ -99,7 +99,19 @@ public class modifpay extends JDialog {
         getContentPane().setBackground(Color.WHITE);
     }
 
-//tableau de type zone de texte de taille = 2 // lay zone de texte roa
+public void resetValues() {
+    for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new java.util.Date());
+                Date currentDate = calendar.getTime();
+                DateSpinner_Pay.setValue(currentDate);
+                dispose();
+}
+
+
+    //tableau de type zone de texte de taille = 2 // lay zone de texte roa
     public static JTextField[] getTextFields() {
     return textFields;
 }

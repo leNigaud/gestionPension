@@ -111,14 +111,15 @@ public class modifpers extends JDialog {
         annulerButton.setFont(annulerButton.getFont().deriveFont(15f));
         annulerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (JTextField zonet : textFields) {
-                zonet.setText("");
-                }
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new java.util.Date());
-                Date currentDate = calendar.getTime();
-                DateSpinner_Pers.setValue(currentDate);
-                dispose();
+                // for (JTextField zonet : textFields) {
+                // zonet.setText("");
+                // }
+                // Calendar calendar = Calendar.getInstance();
+                // calendar.setTime(new java.util.Date());
+                // Date currentDate = calendar.getTime();
+                // DateSpinner_Pers.setValue(currentDate);
+                // dispose();
+                resetValues();
             }
         });
 
@@ -131,7 +132,16 @@ public class modifpers extends JDialog {
         getContentPane().setBackground(Color.WHITE);
     }
     
-
+    public void resetValues() {
+        for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new java.util.Date());
+                Date currentDate = calendar.getTime();
+                DateSpinner_Pers.setValue(currentDate);
+                dispose();
+    }
     private static String[] getValues() {
     return values;
 }

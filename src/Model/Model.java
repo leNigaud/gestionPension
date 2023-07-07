@@ -289,6 +289,29 @@ public class Model {
         
         return rowDataArray;
     }
+
+    public boolean Payexiste(String im,String numTar) {
+ 
+        try {
+            String query = "SELECT COUNT(*) FROM personne, payer, tarif WHERE personne.\"IM\" = payer.\"IM\" AND tarif.num_tarif = payer.num_tarif AND personne.\\\"IM\\\" = ? AND tarif.num_tarif = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, im);
+            ps.setString(2, numTar);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
+            return count>0;
+
+        
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+
+
     //Filtrer par date 
     public Object[][] FiltrerDatePay(LocalDate date1,LocalDate date2) {
  
@@ -538,6 +561,26 @@ public class Model {
         return tarif;
     }
 
+    public boolean numTarifexiste(String numTarif) {
+        Tarif tarif = null;
+        try {
+            String query = "SELECT COUNT(*) FROM tarif WHERE \"num_tarif\" = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, numTarif);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
+            return count > 0 ;
+
+           
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     //Get a Tarif from DB by its diplome 
     public Tarif getTarifDiplome(String diplome) {
         Tarif tarif = null;
@@ -655,6 +698,24 @@ public class Model {
             e.printStackTrace();
         }
         return allPersons;
+    }
+
+    public boolean IMexiste(String IM) {
+      
+        try {
+            String query = "SELECT COUNT(*) FROM personne WHERE \"IM\" = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, IM);
+            
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
+            return count > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return false;
     }
 
     //Finding a person by his name or firstname  

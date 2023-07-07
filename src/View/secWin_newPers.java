@@ -111,14 +111,15 @@ public class secWin_newPers extends JDialog {
         annulerButton.setFont(annulerButton.getFont().deriveFont(15f));
         annulerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (JTextField zonet : textFields) {
-                zonet.setText("");
-                }
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new java.util.Date());
-                Date currentDate = calendar.getTime();
-                DateSpinner_Pers.setValue(currentDate);
-                dispose();
+                // for (JTextField zonet : textFields) {
+                // zonet.setText("");
+                // }
+                // Calendar calendar = Calendar.getInstance();
+                // calendar.setTime(new java.util.Date());
+                // Date currentDate = calendar.getTime();
+                // DateSpinner_Pers.setValue(currentDate);
+                // dispose();
+                resetValues();
             }
         });
 
@@ -132,13 +133,24 @@ public class secWin_newPers extends JDialog {
     }
     
 
+    public void resetValues() {
+        for (JTextField zonet : textFields) {
+                zonet.setText("");
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new java.util.Date());
+                Date currentDate = calendar.getTime();
+                DateSpinner_Pers.setValue(currentDate);
+                dispose();
+    }
+
     private static String[] getValues() {
     return values;
 }
 
 //maka ny tableau de type zone de texte  (ilaina @fangalana ny entrée an'ny nouvel utilisateur) : im , nom , prenom , diplome , contact , status , situation , Nom conjoint , prenom conjoint //tsy ao lay date de naissance
-   public static JTextField getTextFields(int i) {
-    return textFields[i];
+   public static JTextField[] getTextFields() {
+    return textFields;
 }
 //maka anle objet fanaovana saisis de date an'ny fanaovana saisis de date de naissance
     public static JSpinner getBirthDate(){
